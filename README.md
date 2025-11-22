@@ -1,4 +1,4 @@
-# Bienvenue sur le Wiki du Projet "Armorique & Lycanthropes"
+# Bienvenue sur le Wiki du Projet "Envahissement armorique"
 
 Ce projet est une application de simulation complexe développée en Java. Elle combine une simulation d'envahissement de l'Armorique (Gaule Romaine).
 
