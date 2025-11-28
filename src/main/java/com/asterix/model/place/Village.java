@@ -1,4 +1,4 @@
 package com.asterix.model.place;
 
-public class Village {
+public final class Village extends Places {
 }

@@ -1,4 +1,4 @@
 package com.asterix.model.item;
 
-public class Potion {
+public class MagicEffect {
 }

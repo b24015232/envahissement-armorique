@@ -1,4 +1,4 @@
 package com.asterix.model.place;
 
-public class Battlefield {
+public final class Battlefield extends Places {
 }
