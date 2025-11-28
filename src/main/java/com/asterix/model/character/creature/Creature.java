@@ -1,4 +1,4 @@
 package com.asterix.model.character;
 
-public class Druid  {
+public class Creature {
 }
