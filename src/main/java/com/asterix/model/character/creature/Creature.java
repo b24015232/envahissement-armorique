@@ -1,4 +1,4 @@
-package com.asterix.model.character;
+package com.asterix.model.character.creature;
 
 public class Creature {
 }
