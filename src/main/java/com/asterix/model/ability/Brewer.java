@@ -1,4 +1,4 @@
 package com.asterix.model.ability;
 
-public interface Healable {
+public interface Brewer {
 }

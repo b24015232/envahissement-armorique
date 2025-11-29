@@ -1,4 +1,4 @@
 package com.asterix.model.ability;
 
-public interface Orderable {
+public interface Fighter {
 }
