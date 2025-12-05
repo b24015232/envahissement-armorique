@@ -1,4 +1,4 @@
 package com.asterix.model.character.gaul;
 
-public class Druid {
+public class Smith {
 }
