@@ -1,4 +1,4 @@
 package com.asterix.model.place;
 
-public class Battlefield  {
+public abstract class Settlement {
 }
