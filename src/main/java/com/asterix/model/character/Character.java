@@ -15,6 +15,7 @@ public abstract class Character {
     protected double strength;
     protected double stamina;
     protected double health;
+    public static final double MAX_HEALTH = 100.0;
     protected double hunger;
     protected double belligerence;
     protected double potionLevel;
@@ -32,7 +33,7 @@ public abstract class Character {
         this.gender = gender;
 
         // Initial values
-        this.health = 100.0;     // Full health
+        this.health = MAX_HEALTH;     // Full health
         this.hunger = 0.0;       // Not hungry yet
         this.belligerence = 0.0; // Not in war yet
         this.potionLevel = 0.0;  // No magic effect yet
