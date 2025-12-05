@@ -1,24 +1,58 @@
 package com.asterix.model.character;
 
 /**
- * Classe abstraite de base pour tous les personnages
+ * Abstract basic class representing any character in the simulation
+ * Defines common attributes shared by gauls, romans, and creatures
+ * References TD3
  */
-public class Character {
+public abstract class Character {
 
-    private String name;
-    private int health;
+    // characters attributes defined in TD3
+    protected String name;
+    protected Gender gender;
+    protected double height;
+    protected int age;
+    protected double strength;
+    protected double stamina;
+    protected double health;
+    protected double hunger;
+    protected double belligerence;
+    protected double potionLevel;
 
-    // constructeur pour les classes filles
-    protected Character(String name, int health) {
+    /**
+     * Constructor for the abstract Character class
+     * Initializes dynamic attributes with default values
+     */
+    public Character(String name, int age, double height, double strength, double stamina, Gender gender) {
         this.name = name;
-        this.health = health;
+        this.age = age;
+        this.height = height;
+        this.strength = strength;
+        this.stamina = stamina;
+        this.gender = gender;
+
+        // Initial values
+        this.health = 100.0;     // Full health
+        this.hunger = 0.0;       // Not hungry yet
+        this.belligerence = 0.0; // Not in war yet
+        this.potionLevel = 0.0;  // No magic effect yet
     }
+
+    //TODO : Common behaviors (will be filled later)
 
     public String getName() {
         return name;
     }
 
-    public int getHealth() {
+    public double getHealth() {
         return health;
     }
+
+    public double getPotionLevel() {
+        return potionLevel;
+    }
+
+    // Abstract method to force subclasses to implement a string representation
+    @Override
+    public abstract String toString();
 }
