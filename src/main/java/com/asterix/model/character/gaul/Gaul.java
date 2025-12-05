@@ -20,7 +20,10 @@ public class Gaul extends Character {
      */
     public void drinkPotion(double dose) {
         this.potionLevel += dose;
-        System.out.println(this.name + " drinks " + dose + " of magic potion!");
+
+        // if dose=1.0, write "dose". else write "doses"
+        String unit = (dose == 1.0) ? "dose" : "doses";
+        System.out.println(this.name + " drinks " + dose + " " + unit + " of magic potion!");
     }
 
     @Override
