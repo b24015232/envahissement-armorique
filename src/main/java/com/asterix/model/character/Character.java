@@ -48,6 +48,10 @@ public abstract class Character {
         return health;
     }
 
+    public double getPotionLevel() {
+        return potionLevel;
+    }
+
     // Abstract method to force subclasses to implement a string representation
     @Override
     public abstract String toString();
