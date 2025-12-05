@@ -7,7 +7,7 @@ import com.asterix.model.character.Gender;
  * Represents a gaul character
  * Specificity : can drink magic potion
  */
-public class Gaul extends Character {
+public abstract class Gaul extends Character {
 
     public Gaul(String name, int age, double height, double strength, double stamina, Gender gender) {
         super(name, age, height, strength, stamina, gender);
