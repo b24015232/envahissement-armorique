@@ -20,20 +20,26 @@ public class GaulTest {
         double stamina = 100.0;
         Gender gender = Gender.MALE;
 
-        Gaul asterix = new Gaul(name, age, height, strength, stamina, gender);
+        // correcting : variable renamed 'casalix' to be consistent
+        Gaul casalix = new Gaul(name, age, height, strength, stamina, gender);
 
         // assert check heritage
-        assertEquals("Casalix", asterix.getName(), "Name should be initialized correctly");
-        assertEquals(100.0, asterix.getHealth(), "Health should default to 100.0");
-        assertNotNull(asterix.toString(), "ToString should not return null");
+        assertEquals("Casalix", casalix.getName(), "Name should be initialized correctly");
+        assertEquals(100.0, casalix.getHealth(), "Health should default to 100.0");
+        assertNotNull(casalix.toString(), "ToString should not return null");
     }
 
     @Test
     public void testDrinkPotion() {
         // Arrange
-        Gaul obelix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE);
+        // correcting : variable renamed 'balerdix' to be consistent
+        Gaul balerdix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE);
+        double initialPotion = balerdix.getPotionLevel();
 
         // Act
-        obelix.drinkPotion(10.0);
+        balerdix.drinkPotion(10.0);
+
+        // Assert
+        assertEquals(initialPotion + 10.0, balerdix.getPotionLevel(), "Potion level should increase correctly");
     }
 }
