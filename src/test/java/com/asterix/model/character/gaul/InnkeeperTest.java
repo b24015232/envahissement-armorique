@@ -5,8 +5,22 @@ import com.asterix.model.character.Gender;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the {@link Innkeeper} class.
+ * <p>
+ * This class ensures that the Innkeeper inherits correctly from Gaul
+ * and implements the {@link Worker} interface as expected.
+ * </p>
+ */
 public class InnkeeperTest {
 
+    /**
+     * Verifies that an Innkeeper is correctly initialized with the provided attributes.
+     * <p>
+     * Uses a specific test case "Rullix" to verify inheritance of name, health,
+     * and the correct string representation.
+     * </p>
+     */
     @Test
     public void testInnkeeperInitialization() {
         // Arrange : creating Rullix (keeps the inn instead the goals)
@@ -20,6 +34,13 @@ public class InnkeeperTest {
         assertTrue(innkeeper.toString().contains("Innkeeper"), "he toString method should identify the object as an Innkeeper");
     }
 
+    /**
+     * Verifies the {@link Worker} capability of the Innkeeper.
+     * <p>
+     * Checks polymorphism (Innkeeper IS-A Worker) and ensures the {@code work()}
+     * method executes without runtime errors.
+     * </p>
+     */
     @Test
     public void testWorkerCapability() {
         // Arrange

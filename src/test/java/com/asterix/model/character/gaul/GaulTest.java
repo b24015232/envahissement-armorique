@@ -5,11 +5,22 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the gaul class
- * Also validates the logic of the abstract character class
+ * Unit tests for the {@link Gaul} class.
+ * <p>
+ * This class verifies the core logic shared by all Gaul characters,
+ * including inheritance from the abstract Character class and specific Gaul behaviors
+ * like drinking magic potion.
+ * </p>
  */
 public class GaulTest {
 
+    /**
+     * Verifies that a Gaul is correctly initialized with the provided attributes.
+     * <p>
+     * Since {@link Gaul} is an abstract class, we use an anonymous subclass
+     * for instantiation in this test.
+     * </p>
+     */
     @Test
     public void testGaulInitialization() {
         // creating Casalix's gaul version
@@ -21,7 +32,8 @@ public class GaulTest {
         Gender gender = Gender.MALE;
 
         // correcting : variable renamed 'casalix' to be consistent
-        Gaul casalix = new Gaul(name, age, height, strength, stamina, gender);
+        // Quality fix: Using an anonymous class {} because Gaul is abstract
+        Gaul casalix = new Gaul(name, age, height, strength, stamina, gender) {};
 
         // assert check heritage
         assertEquals("Casalix", casalix.getName(), "Name should be initialized correctly");
@@ -29,11 +41,16 @@ public class GaulTest {
         assertNotNull(casalix.toString(), "ToString should not return null");
     }
 
+    /**
+     * Verifies the {@code drinkPotion} method logic.
+     * Ensures that the potion level attribute increases correctly after consumption.
+     */
     @Test
     public void testDrinkPotion() {
         // Arrange
         // correcting : variable renamed 'balerdix' to be consistent
-        Gaul balerdix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE);
+        // Quality fix: Using an anonymous class {} because Gaul is abstract
+        Gaul balerdix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE) {};
         double initialPotion = balerdix.getPotionLevel();
 
         // Act

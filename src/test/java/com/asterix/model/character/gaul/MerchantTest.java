@@ -6,10 +6,21 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the merchant class
+ * Unit tests for the {@link Merchant} class.
+ * <p>
+ * This class validates the specific behavior of the Merchant character,
+ * ensuring correct inheritance from Gaul and implementation of the Worker interface.
+ * </p>
  */
 public class MerchantTest {
 
+    /**
+     * Verifies that a Merchant is correctly initialized with the provided attributes.
+     * <p>
+     * Tests the constructor using a female merchant "Dorix" and checks
+     * standard attributes like name and health.
+     * </p>
+     */
     @Test
     public void testMerchantInitialization() {
         // Arrange
@@ -21,6 +32,13 @@ public class MerchantTest {
         assertTrue(merchant.toString().contains("Merchant"));
     }
 
+    /**
+     * Verifies the {@link Worker} capability of the Merchant.
+     * <p>
+     * Ensures that the Merchant class correctly implements the interface
+     * and that the work method executes without exceptions.
+     * </p>
+     */
     @Test
     public void testWorkerCapability() {
         // Arrange

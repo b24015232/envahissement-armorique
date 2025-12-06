@@ -6,11 +6,18 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Unit tests for the BlackSmith class.
- * Validates specific behavior and interface implementation.
+ * Unit tests for the {@link BlackSmith} class.
+ * <p>
+ * This class validates the specific behavior of the Blacksmith
+ * and ensures it correctly implements the {@link Worker} interface.
+ * </p>
  */
 public class BlackSmithTest {
 
+    /**
+     * Verifies that a BlackSmith is correctly initialized with the expected attributes.
+     * Checks inheritance from the {@link Gaul} class using a custom character "Messix".
+     */
     @Test
     public void testBlackSmithInitialization() {
         // Arrange : creating Messix
@@ -30,6 +37,10 @@ public class BlackSmithTest {
         assertTrue(messix.toString().contains("BlackSmith"), "ToString should identify the class as BlackSmith");
     }
 
+    /**
+     * Verifies the polymorphism capability of the BlackSmith.
+     * Ensures the instance is correctly recognized as a {@link Worker}.
+     */
     @Test
     public void testWorkerCapability() {
         // Arrange
@@ -40,6 +51,9 @@ public class BlackSmithTest {
         assertInstanceOf(Worker.class, smith, "BlackSmith must implement the Worker interface");
     }
 
+    /**
+     * Verifies that the {@code work()} method executes without throwing exceptions.
+     */
     @Test
     public void testWorkMethod() {
         // Arrange

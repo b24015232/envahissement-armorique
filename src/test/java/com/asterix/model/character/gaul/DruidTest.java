@@ -7,8 +7,20 @@ import com.asterix.model.character.Gender;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for the {@link Druid} class.
+ * <p>
+ * This class validates the complex behavior of the Druid, who is a versatile character
+ * implementing three interfaces: {@link Worker}, {@link Fighter}, and {@link Leader}.
+ * </p>
+ */
 public class DruidTest {
 
+    /**
+     * Verifies the specific abilities of the Druid, particularly potion concoction
+     * and polymorphism across multiple interfaces.
+     * Uses a custom character "Nevotix" to represent the academic druid.
+     */
     @Test
     public void testNevotixCapabilities() {
         // Arrange : creating Nevotix
@@ -24,6 +36,9 @@ public class DruidTest {
         assertTrue(nevotix instanceof Leader, "Druid must be a leader");
     }
 
+    /**
+     * Ensures that all action methods (work, command, fight) execute without errors.
+     */
     @Test
     public void testDruidActions() {
         Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE);
