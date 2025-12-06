@@ -18,6 +18,10 @@ class FoodTypeTest {
 
         PerishableFood perishable = (PerishableFood) food;
         assertTrue(perishable.getState() instanceof FreshState);
+
+        // WILDBOAR config: gaulCanEat = true, romanCanEat = false
+        assertTrue(perishable.canBeEatenByGaul());
+        assertFalse(perishable.canBeEatenByRoman());
     }
 
     @Test
@@ -30,6 +34,10 @@ class FoodTypeTest {
         assertEquals("Salt", food.getName());
         assertEquals("CONDIMENT", food.getType());
         assertEquals(1, food.getScore());
+
+        // SALT config: gaulCanEat = true, romanCanEat = true
+        assertTrue(food.canBeEatenByGaul());
+        assertTrue(food.canBeEatenByRoman());
     }
 
     @Test

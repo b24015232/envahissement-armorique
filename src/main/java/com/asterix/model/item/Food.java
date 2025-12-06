@@ -6,6 +6,8 @@ package com.asterix.model.item;
  * A {@code Food} has a name and a type (for example "MEAT", "VEGETABLE", "MAGIC"...)
  * and provides an abstract method {@link #getScore()} that defines
  * how many points this food gives (or removes) when consumed or used.
+ * It also stores information about which kinds of characters
+ * are allowed to eat it (Gauls and/or Romans).
  * </p>
  */
 public abstract class Food {
@@ -21,14 +23,28 @@ public abstract class Food {
     protected final String type;
 
     /**
-     * Creates a new {@code Food} with the given name and type.
-     *
-     * @param name the display name of the food
-     * @param type the logical type/category of the food
+     * Indicates whether this food can be eaten by Gauls.
      */
-    protected Food(String name, String type) {
+    protected final boolean gaulEdible;
+
+    /**
+     * Indicates whether this food can be eaten by Romans.
+     */
+    protected final boolean romanEdible;
+
+    /**
+     * Creates a new {@code Food} with the given name, type and eating permissions.
+     *
+     * @param name        the display name of the food
+     * @param type        the logical type/category of the food
+     * @param gaulEdible  {@code true} if Gauls are allowed to eat this food
+     * @param romanEdible {@code true} if Romans are allowed to eat this food
+     */
+    protected Food(String name, String type, boolean gaulEdible, boolean romanEdible) {
         this.name = name;
         this.type = type;
+        this.gaulEdible = gaulEdible;
+        this.romanEdible = romanEdible;
     }
 
     /**
@@ -47,6 +63,24 @@ public abstract class Food {
      */
     public String getType() {
         return type;
+    }
+
+    /**
+     * Indicates whether a Gaul is allowed to eat this food.
+     *
+     * @return {@code true} if a Gaul can eat this food, {@code false} otherwise
+     */
+    public boolean canBeEatenByGaul() {
+        return gaulEdible;
+    }
+
+    /**
+     * Indicates whether a Roman is allowed to eat this food.
+     *
+     * @return {@code true} if a Roman can eat this food, {@code false} otherwise
+     */
+    public boolean canBeEatenByRoman() {
+        return romanEdible;
     }
 
     /**

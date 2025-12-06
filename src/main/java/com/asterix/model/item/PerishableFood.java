@@ -5,6 +5,7 @@ package com.asterix.model.item;
  * <p>
  * A {@code PerishableFood} delegates its score and status to its current
  * {@link FoodState} and can transition to the next state when time passes.
+ * It also carries information about whether it can be eaten by Gauls and/or Romans.
  * </p>
  */
 public class PerishableFood extends Food {
@@ -17,12 +18,18 @@ public class PerishableFood extends Food {
     /**
      * Creates a new {@code PerishableFood} with an initial state.
      *
-     * @param name         the display name of the food
-     * @param type         the logical type/category of the food
+     * @param name        the display name of the food
+     * @param type        the logical type/category of the food
      * @param initialState the initial {@link FoodState} for this perishable food
+     * @param gaulEdible  {@code true} if Gauls are allowed to eat this food
+     * @param romanEdible {@code true} if Romans are allowed to eat this food
      */
-    public PerishableFood(String name, String type, FoodState initialState) {
-        super(name, type);
+    public PerishableFood(String name,
+                          String type,
+                          FoodState initialState,
+                          boolean gaulEdible,
+                          boolean romanEdible) {
+        super(name, type, gaulEdible, romanEdible);
         this.state = initialState;
     }
 
