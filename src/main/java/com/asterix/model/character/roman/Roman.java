@@ -9,7 +9,6 @@ import com.asterix.model.item.Food;
  * <p>
  * Romans share the common attributes defined in {@link Character}
  * and also have a specific behaviour regarding food and magic potion.
- * </p>
  */
 public abstract class Roman extends Character {
 
@@ -37,12 +36,11 @@ public abstract class Roman extends Character {
      * <p>
      * For now, the basic behaviour is:
      * <ul>
-     *     <li>increase health by the food score (clamped to {@link #MAX_HEALTH})</li>
-     *     <li>slightly reduce hunger</li>
-     *     <li>print a message to the console</li>
+     * <li>increase health by the food score (clamped to {@link #MAX_HEALTH})</li>
+     * <li>slightly reduce hunger</li>
+     * <li>print a message to the console</li>
      * </ul>
      * This can be refined later according to game design rules.
-     * </p>
      *
      * @param food the food consumed by this Roman
      */
@@ -78,7 +76,6 @@ public abstract class Roman extends Character {
      * By default, drinking potion increases the internal {@code potionLevel}
      * and prints an informational message. Subclasses may extend this
      * behaviour (for example by boosting strength temporarily).
-     * </p>
      *
      * @param dose quantity of potion drunk (must be positive)
      */
