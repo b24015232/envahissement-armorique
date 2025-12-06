@@ -4,7 +4,8 @@ package com.asterix.model.item;
  * Represents a non-perishable food item with a fixed score.
  * <p>
  * A {@code SimpleFood} does not change over time and always returns the same
- * {@code baseScore} when queried for its score.
+ * {@code baseScore} when queried for its score. It also stores information
+ * about whether it can be eaten by Gauls and/or Romans.
  * </p>
  */
 public class SimpleFood extends Food {
@@ -15,14 +16,20 @@ public class SimpleFood extends Food {
     private final int baseScore;
 
     /**
-     * Creates a new {@code SimpleFood} with the given base score.
+     * Creates a new {@code SimpleFood} with the given attributes.
      *
-     * @param name      the display name of the food
-     * @param type      the logical type/category of the food
-     * @param baseScore the fixed score value for this food
+     * @param name        the display name of the food
+     * @param type        the logical type/category of the food
+     * @param baseScore   the fixed score value for this food
+     * @param gaulEdible  {@code true} if Gauls are allowed to eat this food
+     * @param romanEdible {@code true} if Romans are allowed to eat this food
      */
-    public SimpleFood(String name, String type, int baseScore) {
-        super(name, type);
+    public SimpleFood(String name,
+                      String type,
+                      int baseScore,
+                      boolean gaulEdible,
+                      boolean romanEdible) {
+        super(name, type, gaulEdible, romanEdible);
         this.baseScore = baseScore;
     }
 

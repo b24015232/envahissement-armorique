@@ -12,7 +12,13 @@ class PerishableFoodTest {
         FoodState initial = new FreshState();
 
         // when
-        PerishableFood food = new PerishableFood("Strawberry", "FRUIT", initial);
+        PerishableFood food = new PerishableFood(
+                "Strawberry",
+                "FRUIT",
+                initial,
+                true,   // Gaul can eat
+                true    // Roman can eat
+        );
 
         // then
         assertEquals("Strawberry", food.getName());
@@ -20,12 +26,20 @@ class PerishableFoodTest {
         assertEquals("Fresh", food.getCurrentStatus());
         assertEquals(10, food.getScore());
         assertTrue(food.getState() instanceof FreshState);
+        assertTrue(food.canBeEatenByGaul());
+        assertTrue(food.canBeEatenByRoman());
     }
 
     @Test
     void perishableFoodShouldChangeStateOverTime() {
         // given
-        PerishableFood food = new PerishableFood("Fish", "MEAT", new FreshState());
+        PerishableFood food = new PerishableFood(
+                "Fish",
+                "MEAT",
+                new FreshState(),
+                true,   // Gaul can eat
+                true    // Roman can eat
+        );
 
         // when - 1st time: Fresh -> PartiallyFresh
         food.passTime();
@@ -47,7 +61,13 @@ class PerishableFoodTest {
     @Test
     void perishableFoodStateCanBeForcedManually() {
         // given
-        PerishableFood food = new PerishableFood("Honey", "SWEET", new FreshState());
+        PerishableFood food = new PerishableFood(
+                "Honey",
+                "SWEET",
+                new FreshState(),
+                true,   // Gaul can eat
+                true    // Roman can eat
+        );
 
         // when
         food.setState(new RottenState());

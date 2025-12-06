@@ -249,9 +249,9 @@ public enum FoodType {
      */
     public Food create() {
         if (isPerishable) {
-            return new PerishableFood(name, type, new FreshState());
+            return new PerishableFood(name, type, new FreshState(),gaulCanEat,romanCanEat);
         } else {
-            return new SimpleFood(name, type, baseScore);
+            return new SimpleFood(name, type, baseScore, gaulCanEat, romanCanEat);
         }
     }
 
