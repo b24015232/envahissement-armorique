@@ -18,7 +18,7 @@ public abstract class Character {
     protected double stamina;
     protected double health;
     public static final double MAX_HEALTH = 100.0;
-    protected double hunger;
+    public double hunger;
     protected double belligerence;
     protected double potionLevel;
 
