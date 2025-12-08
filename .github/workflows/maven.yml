@@ -30,7 +30,7 @@ jobs:
 
       # 3. Compile, Teste ET Génère la Documentation (Javadoc)
       - name: Build and Test with Maven
-        run: mvn -B verify javadoc:javadoc
+        run: mvn -B verify javadoc:javadoc jacoco:report
 
       # 4. Vérifie que le rapport de qualité est généré
       - name: Check JaCoCo Report existence
