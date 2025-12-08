@@ -34,6 +34,9 @@ public class DruidTest {
         assertTrue(nevotix instanceof Worker, "Druid must be a worker");
         assertTrue(nevotix instanceof Fighter, "Druid must be a fighter");
         assertTrue(nevotix instanceof Leader, "Druid must be a leader");
+
+        // Act & assert 3: Check toString() (MISSING PART FIX -> 100% Coverage)
+        assertTrue(nevotix.toString().contains("Druid"), "ToString should work and contain class name");
     }
 
     /**
