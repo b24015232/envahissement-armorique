@@ -2,6 +2,7 @@ package com.asterix.model.character.gaul;
 
 import com.asterix.model.character.Character;
 import com.asterix.model.character.Gender;
+import com.asterix.model.item.Food;
 
 /**
  * Represents a generic Gaul character in the village.
@@ -41,6 +42,38 @@ public abstract class Gaul extends Character {
         // if dose=1.0, write "dose". else write "doses"
         String unit = (dose == 1.0) ? "dose" : "doses";
         System.out.println(this.name + " drinks " + dose + " " + unit + " of magic potion!");
+    }
+
+    /**
+     * Makes the Gaul eat a specific food item.
+     * <p>
+     * This method checks if the food is suitable for a Gaul (e.g., Boar, Fish).
+     * If suitable, it restores health (capped at MAX_HEALTH) and reduces hunger.
+     * </p>
+     *
+     * @param food The food object to consume. If null or unsuitable, no action is taken.
+     */
+    public void eat(Food food) {
+        if (food == null) {
+            return;
+        }
+
+        // Check if this food is specifically allowed for Gauls (Boar, Fish, etc.)
+        // Ensure your Food class has this method corresponding to the Roman one.
+        if (!food.canBeEatenByGaul()) {
+            System.out.println(this.name + " cannot eat " + food.getName() + " (not suitable for Gauls, by Toutatis!).");
+            return;
+        }
+
+        int score = food.getScore();
+
+        // Update health (bounded between 0 and MAX_HEALTH inherited from Character)
+        this.health = Math.max(0.0, Math.min(MAX_HEALTH, this.health + score));
+
+        // Basic rule for hunger: eating always reduces hunger a bit
+        this.hunger = Math.max(0.0, this.hunger - Math.abs(score) / 2.0);
+
+        System.out.println(this.name + " eats " + food.getName() + " and gains " + score + " points of health.");
     }
 
     /**
