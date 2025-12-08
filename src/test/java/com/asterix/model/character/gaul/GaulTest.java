@@ -44,6 +44,9 @@ public class GaulTest {
     /**
      * Verifies the {@code drinkPotion} method logic.
      * Ensures that the potion level attribute increases correctly after consumption.
+     * <p>
+     * Covers both branches: plural doses and singular dose.
+     * </p>
      */
     @Test
     public void testDrinkPotion() {
@@ -53,10 +56,12 @@ public class GaulTest {
         Gaul balerdix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE) {};
         double initialPotion = balerdix.getPotionLevel();
 
-        // Act
+        // Act 1: Test plural (doses) -> Covers the "else" branch
         balerdix.drinkPotion(10.0);
+        assertEquals(initialPotion + 10.0, balerdix.getPotionLevel(), "Potion level should increase correctly with 10 doses");
 
-        // Assert
-        assertEquals(initialPotion + 10.0, balerdix.getPotionLevel(), "Potion level should increase correctly");
+        // Act 2: Test singular (dose) -> Covers the "if (dose == 1.0)" branch for 100% Coverage
+        balerdix.drinkPotion(1.0);
+        assertEquals(initialPotion + 11.0, balerdix.getPotionLevel(), "Potion level should increase correctly with 1 dose");
     }
 }
