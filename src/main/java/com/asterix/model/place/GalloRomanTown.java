@@ -1,4 +1,25 @@
 package com.asterix.model.place;
 
-public class GalloRomanTown {
+import com.asterix.model.character.Character;
+import com.asterix.model.character.gaul.Gaul;
+import com.asterix.model.character.roman.Roman;
+
+/**
+ * Represents a Gallo-Roman Hamlet (Bourgade).
+ * <p>
+ * Access is restricted to Gauls and Romans. Fantastic Creatures are NOT explicitly allowed
+ * in this specific settlement type according to specs.
+ * </p>
+ * [cite_start]Reference: [cite: 502]
+ */
+public final class GalloRomanTown extends Settlement {
+
+    public GalloRomanTown(String name, double area) {
+        super(name, area);
+    }
+
+    @Override
+    protected boolean canEnter(Character c) {
+        return (c instanceof Gaul) || (c instanceof Roman);
+    }
 }
