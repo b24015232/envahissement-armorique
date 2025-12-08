@@ -1,6 +1,7 @@
 package com.asterix.model.character.gaul;
 
 import com.asterix.model.character.Gender;
+import com.asterix.model.item.Food; 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -63,5 +64,50 @@ public class GaulTest {
         // Act 2: Test singular (dose) -> Covers the "if (dose == 1.0)" branch for 100% Coverage
         balerdix.drinkPotion(1.0);
         assertEquals(initialPotion + 11.0, balerdix.getPotionLevel(), "Potion level should increase correctly with 1 dose");
+    }
+
+    /**
+     * Verifies the {@code eat} method logic.
+     * <p>
+     * Tests three scenarios to ensure 100% coverage:
+     * 1. Eating null food (no effect).
+     * 2. Eating food allowed for Gauls (restores health).
+     * 3. Eating food forbidden for Gauls (no effect).
+     * </p>
+     */
+    @Test
+    public void testEat() {
+        // Arrange: Create a Gaul with reduced health to verify healing
+        Gaul ricardix = new Gaul("Ricardix", 51, 2.10, 1000.0, 500.0, Gender.MALE) {
+            { this.health = 50.0; } // Initializer block to set start health
+        };
+
+        // Act 1: Eat null (Should do nothing)
+        ricardix.eat(null);
+        assertEquals(50.0, ricardix.getHealth(), "Eating null should not change health");
+
+        // Act 2: Eat allowed food (Boar)
+        // We create an anonymous Food class. Constructor: name, type, gaulEdible=true, romanEdible=false
+        Food boar = new Food("Wildboar", "MEAT", true, false) {
+            @Override
+            public int getScore() {
+                return 20; // This food gives 20 health points
+            }
+        };
+
+        ricardix.eat(boar);
+        assertEquals(70.0, ricardix.getHealth(), "Eating allowed food should restore health");
+
+        // Act 3: Eat forbidden food (Burger)
+        // Constructor: name, type, gaulEdible=false, romanEdible=true
+        Food burger = new Food("Burger", "JUNK", false, true) {
+            @Override
+            public int getScore() {
+                return 50;
+            }
+        };
+
+        ricardix.eat(burger);
+        assertEquals(70.0, ricardix.getHealth(), "Eating forbidden food should not change health");
     }
 }
