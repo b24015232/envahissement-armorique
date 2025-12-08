@@ -77,7 +77,7 @@ public abstract class Character {
      *
      * @param opponent the character to fight against
      */
-    protected void resolveFight(Character opponent) {
+    public void resolveFight(Character opponent) {
         if (opponent == null || opponent == this) {
             return;
         }

@@ -84,7 +84,7 @@ public class Druid extends Gaul implements Worker, Fighter, Leader {
     public void fight(Character opponent) {
         // Simple implementation to upgrade later when the game will be more complete
         System.out.println(this.getName() + " hits " + opponent.getName() + " with his staff !");
-        // TODO: Implement damage logic : damage = (this.strength / opponent.stamina)
+        resolveFight(opponent);
     }
 
     /**
