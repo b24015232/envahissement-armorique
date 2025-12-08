@@ -12,8 +12,8 @@ class PrefectTest {
     void prefectShouldBeRomanAndLeader() {
         Prefect prefect = new Prefect("Decimus", 38, 1.8, 12, 10, Gender.MALE);
 
-        assertTrue(prefect instanceof Roman);
-        assertTrue(prefect instanceof Leader);
+        assertInstanceOf(Roman.class, prefect);
+        assertInstanceOf(Leader.class, prefect);
     }
 
     @Test

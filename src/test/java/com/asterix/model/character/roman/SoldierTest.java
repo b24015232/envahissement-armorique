@@ -30,7 +30,7 @@ class SoldierTest {
     void soldierShouldImplementFighterInterface() {
         TestSoldier soldier = new TestSoldier("TestSoldier", 30, 1.8, 15, 10, Gender.MALE);
 
-        assertTrue(soldier instanceof Fighter);
+        assertInstanceOf(Fighter.class, soldier);
     }
 
     @Test

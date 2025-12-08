@@ -12,8 +12,8 @@ class LegionnaireTest {
     void legionnaireShouldBeASoldierAndAFighter() {
         Legionnaire leg = new Legionnaire("Claudius", 25, 1.75, 18, 12, Gender.MALE);
 
-        assertTrue(leg instanceof Soldier);
-        assertTrue(leg instanceof Fighter);
+        assertInstanceOf(Soldier.class, leg);
+        assertInstanceOf(Fighter.class, leg);
     }
 
     @Test

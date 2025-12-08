@@ -13,9 +13,9 @@ class GeneralTest {
     void generalShouldBeSoldierFighterAndLeader() {
         General general = new General(1, "Caius", 40, 1.85, 25, 15, Gender.MALE);
 
-        assertTrue(general instanceof Soldier);
-        assertTrue(general instanceof Fighter);
-        assertTrue(general instanceof Leader);
+        assertInstanceOf(Soldier.class, general);
+        assertInstanceOf(Fighter.class, general);
+        assertInstanceOf(Leader.class, general);
     }
 
     @Test
