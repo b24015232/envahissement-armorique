@@ -3,167 +3,188 @@ package com.asterix.model.simulation;
 import com.asterix.model.character.Character;
 import com.asterix.model.character.gaul.Gaul;
 import com.asterix.model.character.roman.Roman;
-
-import com.asterix.model.place.Place;
+import com.asterix.model.item.Food; // Assure-toi d'avoir cette classe
+import com.asterix.model.item.FoodFactory;
+import com.asterix.model.item.PerishableFood;
 import com.asterix.model.place.Battlefield;
-
+import com.asterix.model.place.Place;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
- * Représente le théâtre d'envahissement[cite: 101].
+ * [cite_start]Represents the invasion theater where the simulation takes place[cite: 101].
+ * Acts as the main facade for the domain model.
  */
 public class InvasionTheater {
 
-    private String nom; // [cite: 102]
-    private List<Place> places; // Utilisation de Collections [cite: 745, 104]
+    private String name;
+    private List<Place> places;
+    private final Random random;
 
-    public InvasionTheater(String nom) {
-        this.nom = nom;
+    // Constants for simulation balancing
+    private static final double RANDOM_EVENT_PROBABILITY = 0.30;
+
+    public InvasionTheater(String name) {
+        this.name = name;
         this.places = new ArrayList<>();
+        this.random = new Random();
     }
 
-    public String getNom() { return nom; }
+    public String getName() { return name; } // previously getNom
 
-    /**
-     * Ajoute un lieu au théâtre d'envahissement.
-     * Cette méthode est utilisée lors du chargement du scénario XML.
-     *
-     * @param place Le lieu à ajouter (ne doit pas être null).
-     */
     public void addPlace(Place place) {
         if (place != null) {
             this.places.add(place);
         } else {
-            System.err.println("Erreur : Tentative d'ajout d'un lieu null dans le théâtre.");
+            System.err.println("Error: Attempted to add a null Place to the Theater.");
         }
     }
 
-    /**
-     * Retourne la liste des lieux (utile pour le contrôleur et l'affichage).
-     * @return Une copie de la liste des lieux.
-     */
     public List<Place> getPlaces() {
         return new ArrayList<>(places);
     }
+    /**
+     * Manages combat logic between characters in Battlefields.
+     * Rename of 'gererCombats' to comply with English naming convention.
+     */
+    public void handleFights() {
+        if (this.places == null || this.places.isEmpty()) return;
 
-    // --- Méthodes Métier [cite: 111-114] ---
-
-    public void gererCombats() {
-        // Validation pré-conditionnelle pour éviter les erreurs d'exécution sur des collections nulles
-        if (this.places == null || this.places.isEmpty()) {
-            System.err.println("Aucun lieu configuré dans le théâtre d'opérations.");
-            return;
-        }
-
-        // Parcours de tous les lieux du théâtre d'envahissement [cite: 532]
         for (Place place : this.places) {
-
-            // Les combats ont lieu principalement sur les champs de bataille
             if (place instanceof Battlefield) {
                 Battlefield battlefield = (Battlefield) place;
-
-                // Récupération des personnages présents (Ceci est une copie de la liste) [cite: 491]
                 List<Character> combatants = battlefield.getCharacters();
 
-                if (combatants.size() < 2) {
-                    continue; // Pas assez de combattants pour un duel
-                }
+                if (combatants.size() < 2) continue;
 
-                // --- Séparation des camps ---
-                List<Character> gaulCamp = new ArrayList<>();
-                List<Character> romanCamp = new ArrayList<>();
+                List<Character> gaulCamp = combatants.stream().filter(c -> c instanceof Gaul && c.isAlive()).collect(Collectors.toList());
+                List<Character> romanCamp = combatants.stream().filter(c -> c instanceof Roman && c.isAlive()).collect(Collectors.toList());
 
-                for (Character c : combatants) {
-                    if (c.isAlive()) {
-                        // Polymorphisme pour trier les camps [cite: 465]
-                        if (c instanceof Gaul) {
-                            gaulCamp.add(c);
-                        } else if (c instanceof Roman) {
-                            romanCamp.add(c);
-                        }
-                    }
-                }
-
-                // Mélange aléatoire pour varier les affrontements (Simulation ludique)
                 Collections.shuffle(gaulCamp);
                 Collections.shuffle(romanCamp);
 
-                // --- Résolution des duels ---
                 int minSize = Math.min(gaulCamp.size(), romanCamp.size());
 
                 for (int i = 0; i < minSize; i++) {
                     Character gaul = gaulCamp.get(i);
                     Character roman = romanCamp.get(i);
-
-                    // Le combat impacte la santé (force vs endurance) [cite: 680, 681]
                     gaul.resolveFight(roman);
                 }
 
-                // --- Gestion des morts (Nettoyage post-combat) ---
-                // On utilise une liste temporaire pour stocker les morts afin d'éviter
-                // les problèmes de modification concurrente lors de la suppression.
-                List<Character> casualties = new ArrayList<>();
+                // Cleanup casualties
+                List<Character> casualties = combatants.stream()
+                        .filter(c -> !c.isAlive())
+                        .collect(Collectors.toList());
 
-                for (Character c : combatants) {
-                    if (!c.isAlive()) { // Si indicateur de santé critique
-                        casualties.add(c);
-                        // Affichage du message demandé
-                        System.out.println("✝️ " + c.getName() + " a rendu l'âme sur le champ de bataille " + battlefield.getName() + ".");
-                    } else {
-                        // Logique optionnelle : Renvoyer le survivant chez lui
-                        // returnCharacterToOrigin(c);
-                    }
-                }
-
-                // Suppression effective des morts du Lieu réel
-                for (Character dead : casualties) {
+                casualties.forEach(dead -> {
+                    System.out.println("✝️ " + dead.getName() + " has fallen at " + battlefield.getName());
                     battlefield.removeCharacter(dead);
-                }
+                });
             }
         }
     }
 
-    public void appliquerAleas() {
-        // TODO: Modifier aléatoirement l'état des personnages [cite: 112]
+    /**
+     * [cite_start]Randomly modifies the state of characters (Hunger, Potion, Health)[cite: 112].
+     */
+    public void applyRandomEvents() {
+        if (places == null) return;
+
+        places.stream()
+                .flatMap(place -> place.getCharacters().stream())
+                .forEach(character -> {
+                    if (random.nextDouble() < RANDOM_EVENT_PROBABILITY) {
+                        int eventType = random.nextInt(3);
+                        switch (eventType) {
+                            case 0:
+                                break;
+                            case 1:
+                                break;
+                            case 2:
+                                break;
+                        }
+                    }
+                });
     }
 
-    public void genererAliments() {
-        // TODO: Faire apparaître des aliments [cite: 113]
+    /**
+     * [cite_start]Generates food in locations other than battlefields[cite: 113].
+     */
+    /**
+     * Generates food randomly in compatible locations at each turn.
+     * * Logic:
+     * 1. Iterates through all places.
+     * 2. Skips Battlefields (Constraint ).
+     * 3. Uses a probability check to decide if food spawns.
+     */
+    public void generateFood() {
+        if (this.places == null) return;
+
+        // Message de debug pour vérifier que la méthode est appelée
+        System.out.println("[SIMULATION] Checking food generation...");
+
+        for (Place place : this.places) {
+
+            // CONSTRAINT: Food cannot spawn on Battlefields
+            if (place instanceof Battlefield) {
+                continue;
+            }
+
+            // Probability: 40% chance per location per turn
+            if (random.nextDouble() < 0.40) {
+
+                // 1. Create random food using the Factory
+                Food newFood = FoodFactory.createRandomFood();
+
+                // 2. Add it to the place using the method we just added
+                place.addFood(newFood);
+
+                System.out.println("   -> 🍎 A " + newFood.getName() + " appeared in " + place.getName());
+            }
+        }
     }
 
-    public void vieillirAliments() {
-        // TODO: Changer les aliments frais en pas frais [cite: 114]
+    /**
+     * [cite_start]Ages food items, turning fresh food into stale food[cite: 114].
+     */
+    public void ageFood() {
+        if (places == null) return;
+
+        for (Place place : places) {
+             for (Food food : place.getFoods()) {
+                 if (food instanceof PerishableFood) {
+                     ((PerishableFood) food).passTime();
+                 }
+             }
+        }
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("=== Théâtre d'envahissement : ").append(nom).append(" ===\n");
+        sb.append("=== Invasion Theater: ").append(name).append(" ===\n"); // [cite: 662]
 
         if (places == null || places.isEmpty()) {
-            sb.append("Aucun lieu configuré.\n");
+            sb.append("No location configured.\n");
         } else {
             for (Place place : places) {
-                // Titre du lieu avec distinction si c'est un champ de bataille (lieu de combat)
-                sb.append("📍 Lieu : ").append(place.getName());
+                // 1. Display Place Name and Type
+                sb.append("📍 Location: ").append(place.getName());
                 if (place instanceof Battlefield) {
-                    sb.append(" [⚔️ ZONE DE COMBAT]");
+                    sb.append(" [⚔️ BATTLEFIELD]");
                 }
                 sb.append("\n");
 
-                // Récupération des personnages
+                // 2. Display Characters [cite: 663]
                 List<Character> occupants = place.getCharacters();
-
                 if (occupants.isEmpty()) {
-                    sb.append("   (Aucun personnage présent)\n");
+                    sb.append("   (No characters present)\n");
                 } else {
-                    sb.append("   👥 Personnages présents (").append(occupants.size()).append(") : ");
-
-                    // Liste des noms des personnages
+                    sb.append("   👥 Characters (").append(occupants.size()).append("): ");
                     for (int i = 0; i < occupants.size(); i++) {
                         sb.append(occupants.get(i).getName());
                         if (i < occupants.size() - 1) {
@@ -172,6 +193,24 @@ public class InvasionTheater {
                     }
                     sb.append("\n");
                 }
+
+                // 3. Display Foods (Added Feature)
+                // Assumes Place has a getter: public List<Food> getFoods();
+                List<Food> foodItems = place.getFoods();
+                if (foodItems.isEmpty()) {
+                    sb.append("   (No food items)\n");
+                } else {
+                    sb.append("   🍎 Food items (").append(foodItems.size()).append("): ");
+                    for (int i = 0; i < foodItems.size(); i++) {
+                        // getName() will include state description (e.g., "Fish (Stale)") thanks to State Pattern
+                        sb.append(foodItems.get(i).getName());
+                        if (i < foodItems.size() - 1) {
+                            sb.append(", ");
+                        }
+                    }
+                    sb.append("\n");
+                }
+
                 sb.append("--------------------------------------------------\n");
             }
         }

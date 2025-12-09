@@ -27,7 +27,7 @@ public class XmlScenarioSaver {
 
         // 2. Nom du théâtre <nom>
         Element nom = doc.createElement("nom");
-        nom.appendChild(doc.createTextNode(theater.getNom()));
+        nom.appendChild(doc.createTextNode(theater.getName()));
         rootElement.appendChild(nom);
 
         // 3. Liste des lieux <lieux>

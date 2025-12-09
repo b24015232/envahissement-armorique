@@ -99,12 +99,70 @@ public abstract sealed class Place permits Battlefield, Settlement {
     }
 
     /**
+     * Adds a food item to this place.
+     * Necessary for the simulation engine to spawn items.
+     *
+     * @param food The food item to add.
+     * Reference:
+     */
+    public void addFood(Food food) {
+        if (food != null) {
+            this.foods.add(food);
+        }
+    }
+
+    /**
+     * Removes a food item from this place (e.g. when eaten).
+     *
+     * @param food The food item to consume/remove.
+     */
+    public void removeFood(Food food) {
+        this.foods.remove(food);
+    }
+
+    /**
      * Gets the name of the place.
      *
      * @return The name string.
      */
     public String getName() {
         return name;
+    }
+
+    public void displayCharacteristics() {
+        StringBuilder sb = new StringBuilder();
+
+        // 1. Basic Characteristics [cite: 708, 709, 711]
+        sb.append("========================================\n");
+        sb.append("📍 Location Info: ").append(this.name).append("\n");
+        sb.append("   📏 Area: ").append(this.area).append(" m²\n");
+        sb.append("   👥 Population: ").append(this.characters.size()).append("\n");
+
+        // 2. List of Characters (Detailed) [cite: 712, 715]
+        sb.append("\n--- Occupants ---\n");
+        if (characters.isEmpty()) {
+            sb.append("   (None)\n");
+        } else {
+            for (Character c : characters) {
+                // Assuming Character.toString() displays its characteristics (Name, Health, etc.)
+                sb.append("   👤 ").append(c.toString()).append("\n");
+            }
+        }
+
+        // 3. List of Foods [cite: 713, 715]
+        sb.append("\n--- Food Inventory ---\n");
+        if (foods.isEmpty()) {
+            sb.append("   (Empty)\n");
+        } else {
+            for (Food f : foods) {
+                // Uses getName() which includes the state (Fresh/Stale) thanks to our State Pattern
+                sb.append("   🍎 ").append(f.getName()).append(" (Type: ").append(f.getType()).append(")\n");
+            }
+        }
+        sb.append("========================================\n");
+
+        // Print to standard output
+        System.out.println(sb.toString());
     }
 
     @Override

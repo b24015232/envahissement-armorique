@@ -51,7 +51,7 @@ public class SimulationController implements Runnable {
 
     public void initializeModel(String xmlPath) throws Exception {
         this.model = XmlScenarioLoader.loadTheater(xmlPath);
-        logToView("Théâtre chargé : " + model.getNom());
+        logToView("Théâtre chargé : " + model.getName());
     }
 
     // --- Gestion des Actions Utilisateur ---
@@ -103,15 +103,15 @@ public class SimulationController implements Runnable {
     }
 
     /**
-     * Exécute les actions requises à intervalle régulier[cite: 110].
+     * [cite_start]Executes required actions at regular intervals[cite: 110].
+     * (Formerly simulateStep)
      */
     private void simulateStep() {
         if (model != null) {
-            model.gererCombats();
-            System.out.println("normalement ya eu heja");// [cite: 111]
-            model.appliquerAleas();     // [cite: 112]
-            model.genererAliments();    // [cite: 113]
-            model.vieillirAliments();   // [cite: 114]
+            model.handleFights();
+            model.applyRandomEvents();
+            model.generateFood();
+            model.ageFood();
         }
     }
 
@@ -203,7 +203,7 @@ public class SimulationController implements Runnable {
         // Vous devrez adapter XmlScenarioLoader pour accepter un chemin absolu
         // ou créer une méthode loadTheaterFromFile(File f)
         this.model = XmlScenarioLoader.loadTheaterFromFile(new File(path));
-        logToView("Chargé : " + model.getNom());
+        logToView("Chargé : " + model.getName());
     }
 
 }
