@@ -3,7 +3,7 @@ package com.asterix.model.simulation;
 import com.asterix.model.character.Character;
 import com.asterix.model.character.gaul.Gaul;
 import com.asterix.model.character.roman.Roman;
-import com.asterix.model.item.Food; // Assure-toi d'avoir cette classe
+import com.asterix.model.item.Food;
 import com.asterix.model.item.FoodFactory;
 import com.asterix.model.item.PerishableFood;
 import com.asterix.model.place.Battlefield;
@@ -25,7 +25,6 @@ public class InvasionTheater {
     private List<Place> places;
     private final Random random;
 
-    // Constants for simulation balancing
     private static final double RANDOM_EVENT_PROBABILITY = 0.30;
 
     public InvasionTheater(String name) {
@@ -75,7 +74,6 @@ public class InvasionTheater {
                     gaul.resolveFight(roman);
                 }
 
-                // Cleanup casualties
                 List<Character> casualties = combatants.stream()
                         .filter(c -> !c.isAlive())
                         .collect(Collectors.toList());
@@ -111,9 +109,6 @@ public class InvasionTheater {
                 });
     }
 
-    /**
-     * [cite_start]Generates food in locations other than battlefields[cite: 113].
-     */
     /**
      * Generates food randomly in compatible locations at each turn.
      * * Logic:
