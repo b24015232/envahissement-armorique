@@ -49,7 +49,7 @@ public abstract sealed class Place permits Battlefield, Settlement {
      * @return {@code true} if the character meets the entry criteria, {@code false} otherwise.
      * Reference:
      */
-    protected abstract boolean canEnter(Character c);
+    public abstract boolean canEnter(Character c);
 
     /**
      * Adds a character to this place if the entry rules allow it.
@@ -129,16 +129,14 @@ public abstract sealed class Place permits Battlefield, Settlement {
         return name;
     }
 
-    public void displayCharacteristics() {
+    public StringBuilder displayCharacteristics() {
         StringBuilder sb = new StringBuilder();
 
-        // 1. Basic Characteristics [cite: 708, 709, 711]
         sb.append("========================================\n");
         sb.append("📍 Location Info: ").append(this.name).append("\n");
         sb.append("   📏 Area: ").append(this.area).append(" m²\n");
         sb.append("   👥 Population: ").append(this.characters.size()).append("\n");
 
-        // 2. List of Characters (Detailed) [cite: 712, 715]
         sb.append("\n--- Occupants ---\n");
         if (characters.isEmpty()) {
             sb.append("   (None)\n");
@@ -149,7 +147,6 @@ public abstract sealed class Place permits Battlefield, Settlement {
             }
         }
 
-        // 3. List of Foods [cite: 713, 715]
         sb.append("\n--- Food Inventory ---\n");
         if (foods.isEmpty()) {
             sb.append("   (Empty)\n");
@@ -161,8 +158,8 @@ public abstract sealed class Place permits Battlefield, Settlement {
         }
         sb.append("========================================\n");
 
-        // Print to standard output
         System.out.println(sb.toString());
+        return sb;
     }
 
     @Override
