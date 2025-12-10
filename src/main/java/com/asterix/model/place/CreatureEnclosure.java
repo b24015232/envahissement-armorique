@@ -17,7 +17,7 @@ public final class CreatureEnclosure extends Settlement {
     }
 
     @Override
-    protected boolean canEnter(Character c) {
+    public boolean canEnter(Character c) {
         return c instanceof Creature;
     }
 }

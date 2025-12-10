@@ -19,7 +19,7 @@ public final class GalloRomanTown extends Settlement {
     }
 
     @Override
-    protected boolean canEnter(Character c) {
+    public boolean canEnter(Character c) {
         return (c instanceof Gaul) || (c instanceof Roman);
     }
 }

@@ -12,7 +12,7 @@ import com.asterix.utils.XmlScenarioSaver;
 import javafx.scene.control.TextField;
 
 /**
- * Contrôleur gérant la logique temporelle de la simulation[cite: 109, 110].
+ * Contrôleur gérant la logique temporelle de la simulation.
  * Implémente Runnable pour l'utilisation de Threads.
  */
 public class SimulationController implements Runnable {
@@ -26,9 +26,9 @@ public class SimulationController implements Runnable {
     private InvasionTheater model;
 
     // --- Gestion du Thread ---
-    private volatile boolean isRunning = false; // volatile pour la visibilité entre threads
+    private volatile boolean isRunning = false;
     private Thread simulationThread;
-    private static final int TIME_STEP = 2000; // 2 secondes par tour
+    private static final int TIME_STEP = 2000;
 
     /**
      * Méthode appelée automatiquement par JavaFX après le chargement du FXML.
@@ -37,8 +37,6 @@ public class SimulationController implements Runnable {
     public void initialize() {
         outputArea.appendText("Initialisation du système...\n");
         try {
-            // Chargement initial (Simulation d'un chemin pour l'exemple)
-            // Idéalement, ouvrir un FileChooser ici
             initializeModel("src/main/resources/com/asterix/data/scenarioDefaut.xml");
         } catch (Exception e) {
             outputArea.appendText(e.getMessage());
@@ -54,14 +52,12 @@ public class SimulationController implements Runnable {
         logToView("Théâtre chargé : " + model.getName());
     }
 
-    // --- Gestion des Actions Utilisateur ---
-
     @FXML
     private void handleStart() {
         if (!isRunning) {
             isRunning = true;
             simulationThread = new Thread(this);
-            simulationThread.start(); // Lancement du Thread
+            simulationThread.start();
 
             btnStart.setDisable(true);
             btnStop.setDisable(false);
@@ -77,22 +73,17 @@ public class SimulationController implements Runnable {
         logToView(">>> Simulation en pause.");
     }
 
-    // --- Logique du Thread ---
 
     @Override
     public void run() {
         while (isRunning) {
             try {
-                // 1. Logique métier [cite: 110]
-                simulateStep();
 
-                // 2. Mise à jour de l'interface graphique
-                // IMPORTANT : Doit être fait dans le thread JavaFX
+                simulateStep();
                 Platform.runLater(() -> {
                     updateView();
                 });
 
-                // 3. Pause temporelle
                 Thread.sleep(TIME_STEP);
 
             } catch (InterruptedException e) {
@@ -103,7 +94,7 @@ public class SimulationController implements Runnable {
     }
 
     /**
-     * [cite_start]Executes required actions at regular intervals[cite: 110].
+     * Executes required actions at regular intervals.
      * (Formerly simulateStep)
      */
     private void simulateStep() {
@@ -117,11 +108,8 @@ public class SimulationController implements Runnable {
 
     private void updateView() {
         if (model != null) {
-            // Affichage simple de l'état actuel
             outputArea.appendText(model.toString() + "\n");
             outputArea.appendText("--------------------------------------------------\n");
-
-            // Scroll automatique vers le bas
             outputArea.setScrollTop(Double.MAX_VALUE);
         }
     }
@@ -130,26 +118,15 @@ public class SimulationController implements Runnable {
         outputArea.appendText(message + "\n");
     }
 
-
-
-// ... Dans la classe SimulationController
-
     @FXML private TextField inputNomTheatre;
-
-    // 1. Créer un nouveau théâtre en mémoire
     @FXML
     public void handleCreerTheatre() {
         String nom = inputNomTheatre.getText();
         if (nom.isEmpty()) nom = "Théâtre Personnalisé";
-
         this.model = new InvasionTheater(nom);
-        // Ajoutez ici des lieux par défaut si vous voulez
-
         logToView("Nouveau théâtre créé : " + nom);
         logToView("Ajoutez des lieux puis sauvegardez.");
     }
-
-    // 2. Sauvegarder vers un fichier XML
     @FXML
     public void handleSaveScenario() {
         if (model == null) {
@@ -162,7 +139,6 @@ public class SimulationController implements Runnable {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Fichiers XML", "*.xml"));
         fileChooser.setInitialFileName("mon_scenario.xml");
 
-        // Ouvre la fenêtre "Enregistrer sous"
         File file = fileChooser.showSaveDialog(null);
 
         if (file != null) {
@@ -176,7 +152,6 @@ public class SimulationController implements Runnable {
         }
     }
 
-    // 3. Charger (modifier votre méthode existante pour utiliser FileChooser)
     @FXML
     public void handleLoadScenario() {
         FileChooser fileChooser = new FileChooser();
@@ -187,10 +162,6 @@ public class SimulationController implements Runnable {
 
         if (file != null) {
             try {
-                // ATTENTION : Ici on utilise loadTheater (qui prend un File)
-                // et PAS loadTheaterFromResource (qui prend un String interne)
-                // Vous devrez peut-être surcharger votre méthode dans le Loader.
-                // Pour l'instant, faisons simple :
                 initializeModelFromExternal(file.getAbsolutePath());
             } catch (Exception e) {
                 logToView("Erreur chargement : " + e.getMessage());
@@ -198,10 +169,7 @@ public class SimulationController implements Runnable {
         }
     }
 
-    // Petite méthode utilitaire pour charger depuis l'extérieur (Disque dur)
     private void initializeModelFromExternal(String path) throws Exception {
-        // Vous devrez adapter XmlScenarioLoader pour accepter un chemin absolu
-        // ou créer une méthode loadTheaterFromFile(File f)
         this.model = XmlScenarioLoader.loadTheaterFromFile(new File(path));
         logToView("Chargé : " + model.getName());
     }

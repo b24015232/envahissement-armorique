@@ -19,7 +19,7 @@ public final class RomanCamp extends Settlement {
     }
 
     @Override
-    protected boolean canEnter(Character c) {
+    public boolean canEnter(Character c) {
         // "ne peut contenir que des combattants romains"
         return (c instanceof Roman) || (c instanceof Creature);
     }

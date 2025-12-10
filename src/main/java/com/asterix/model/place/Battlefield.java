@@ -28,7 +28,7 @@ public final class Battlefield extends Place {
      * [cite_start]Reference: [cite: 504]
      */
     @Override
-    protected boolean canEnter(Character c) {
+    public boolean canEnter(Character c) {
         return true;
     }
 }
