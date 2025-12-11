@@ -49,4 +49,14 @@ public class Merchant extends Gaul implements Worker {
     public String toString() {
         return "Merchant " + super.toString();
     }
+
+    /**
+     * Returns the current health points of the merchant.
+     *
+     * @return The current health value.
+     */
+    @Override
+    public double getHealth() {
+        return this.health;
+    }
 }

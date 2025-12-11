@@ -50,4 +50,14 @@ public class Innkeeper extends Gaul implements Worker {
     public String toString() {
         return "Innkeeper " + super.toString();
     }
+
+    /**
+     * Returns the current health points of the innkeeper.
+     *
+     * @return The current health value.
+     */
+    @Override
+    public double getHealth() {
+        return this.health;
+    }
 }

@@ -14,10 +14,10 @@ import com.asterix.model.item.Food;
 public abstract class Gaul extends Character {
 
     /**
-     * Constructs a new Gaul character.
+     * Constructs a new Gaul character with the specified attributes.
      *
      * @param name     The name of the Gaul.
-     * @param age      The age of the Gaul.
+     * @param age      The age of the Gaul in years.
      * @param height   The height of the Gaul in meters.
      * @param strength The physical strength of the Gaul.
      * @param stamina  The stamina/endurance of the Gaul.
@@ -76,5 +76,13 @@ public abstract class Gaul extends Character {
         System.out.println(this.name + " eats " + food.getName() + " and gains " + score + " points of health.");
     }
 
-
+    /**
+     * Returns the current health points of the Gaul.
+     *
+     * @return The current health value.
+     */
+    @Override
+    public double getHealth() {
+        return this.health;
+    }
 }

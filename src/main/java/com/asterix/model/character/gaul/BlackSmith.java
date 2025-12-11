@@ -49,4 +49,14 @@ public class BlackSmith extends Gaul implements Worker {
     public String toString() {
         return "BlackSmith " + super.toString();
     }
+
+    /**
+     * Returns the current health points of the blacksmith.
+     *
+     * @return The current health value.
+     */
+    @Override
+    public double getHealth() {
+        return this.health;
+    }
 }

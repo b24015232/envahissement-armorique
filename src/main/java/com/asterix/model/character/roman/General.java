@@ -52,7 +52,8 @@ public class General extends Soldier implements Leader {
     /**
      * Performs a leadership action.
      * <p>
-     * For now, this method just prints an informative message.
+     * For now, this method just prints an informative message indicating
+     * that the general is leading troops.
      * </p>
      */
     @Override
@@ -86,5 +87,14 @@ public class General extends Soldier implements Leader {
     public void attack() {
         System.out.println(name + " (General) orders a powerful offensive maneuver!");
     }
-}
 
+    /**
+     * Returns the current health points of the General.
+     *
+     * @return The current health value.
+     */
+    @Override
+    public double getHealth() {
+        return this.health;
+    }
+}

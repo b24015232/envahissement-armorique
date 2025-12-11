@@ -10,6 +10,10 @@ import com.asterix.model.character.Gender;
  * to represent animals, monsters, or supernatural beings
  * (werewolves, lycanthropes, etc.).
  * </p>
+ * <p>
+ * This class introduces specific behaviors for creatures, such as the ability
+ * to enter a "feral" state, which can impact their combat statistics or behavior.
+ * </p>
  */
 public abstract class Creature extends Character {
 
@@ -22,12 +26,12 @@ public abstract class Creature extends Character {
     /**
      * Creates a new creature with the given basic attributes.
      *
-     * @param name     creature name
-     * @param age      creature age
-     * @param height   creature height
-     * @param strength creature strength
-     * @param stamina  creature stamina (resistance to damage)
-     * @param gender   creature gender
+     * @param name     The name of the creature.
+     * @param age      The age of the creature in years.
+     * @param height   The height of the creature in meters.
+     * @param strength The physical strength of the creature.
+     * @param stamina  The stamina/endurance of the creature (resistance to damage).
+     * @param gender   The gender of the creature.
      */
     protected Creature(String name,
                        int age,
@@ -41,6 +45,8 @@ public abstract class Creature extends Character {
 
     /**
      * Returns whether the creature is currently in a feral state.
+     *
+     * @return {@code true} if the creature is in a rage/feral state, {@code false} otherwise.
      */
     public boolean isFeral() {
         return feral;
@@ -48,6 +54,10 @@ public abstract class Creature extends Character {
 
     /**
      * Puts the creature into a feral/raging state.
+     * <p>
+     * When feral, the creature may exhibit aggressive behavior or enhanced stats
+     * depending on the specific implementation.
+     * </p>
      */
     public void enterFeralState() {
         this.feral = true;
@@ -55,11 +65,19 @@ public abstract class Creature extends Character {
 
     /**
      * Brings the creature back to a calmer state.
+     * <p>
+     * This deactivates the feral mode.
+     * </p>
      */
     public void leaveFeralState() {
         this.feral = false;
     }
 
+    /**
+     * Returns a string representation of the creature, including its specific state.
+     *
+     * @return A formatted string containing the class name, name, health, strength, stamina, and feral status.
+     */
     @Override
     public String toString() {
         return getClass().getSimpleName()

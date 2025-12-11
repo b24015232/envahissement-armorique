@@ -41,10 +41,26 @@ class InvasionTheaterTest {
 
     private static class FakeWeakGaul extends SimpleCharacter {
         public FakeWeakGaul(String name) { super(name, false); }
+
+        /**
+         * @return
+         */
+        @Override
+        public double getHealth() {
+            return 0;
+        }
     }
 
     private static class FakeStrongRoman extends SimpleCharacter {
         public FakeStrongRoman(String name) { super(name, false); }
+
+        /**
+         * @return
+         */
+        @Override
+        public double getHealth() {
+            return 0;
+        }
     }
 
     @Test

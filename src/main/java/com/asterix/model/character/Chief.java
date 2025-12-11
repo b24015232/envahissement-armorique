@@ -1,38 +1,36 @@
 package com.asterix.model.character;
+
 import com.asterix.model.character.gaul.Druid;
 import com.asterix.model.place.Place;
-import com.asterix.model.place.Battlefield;
-import com.asterix.model.place.CreatureEnclosure;
 import com.asterix.model.item.Food;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import static com.asterix.model.character.Character.MAX_HEALTH;
+
 /**
  * Represents a Clan Chief attached to a specific Location.
  * <p>
- * According to the specifications, a Clan Chief can manage their location,
- * heal/feed troops, and order Druids to brew potions.
+ * [cite_start]According to the specifications, a Clan Chief is responsible for a location[cite: 302].
+ * They can manage their location (examine), heal/feed troops, and order Druids to brew potions.
  * </p>
- * * @author Project Team
- * @version 2.0
  */
 public class Chief {
 
     private String name;
     private String gender;
     private int age;
+
     /**
      * The location this chief is responsible for.
-     * [cite: 636] "Les chefs de clan sont rattachés à un lieu"
      */
     private Place place;
+
     /**
      * Creates a new Clan Chief.
-     * * @param name Name of the chief.
-     * @param gender Sex of the chief.
-     * @param age Age of the chief.
-     * @param place The initial location they manage.
+     *
+     * @param name   The name of the chief.
+     * @param gender The gender of the chief.
+     * @param age    The age of the chief.
+     * @param place  The initial location they manage.
      */
     public Chief(String name, String gender, int age, Place place) {
         this.name = name;
@@ -40,18 +38,22 @@ public class Chief {
         this.age = age;
         this.place = place;
     }
+
     /**
      * Examines the location by displaying its characteristics, characters, and food.
-     * [cite: 641] "examiner son lieu"
-     * * @return A formatted string describing the location status.
+     *
+     * [cite_start]@return A formatted string describing the location status[cite: 307].
      */
     public String examineLocation() {
         if (place == null) return "This chief has no assigned location.";
         return place.toString();
     }
+
     /**
      * Heals all characters present in the chief's location.
-     * [cite: 643] "soigner les personnages de son lieu"
+     * <p>
+     * [cite_start]This restores characters to their maximum health[cite: 309].
+     * </p>
      */
     public void healCharactersInLocation() {
         if (place == null) return;
@@ -66,10 +68,12 @@ public class Chief {
 
         System.out.println(this.name + " has healed " + healedCount + " characters in " + place.getName());
     }
+
     /**
      * Feeds characters in the location using available food.
-     * [cite: 644] "nourrir les personnages de son lieu"
-     *  "en consommant des aliments qu'il contient"
+     * <p>
+     * [cite_start]Characters consume food found in the location to reduce their hunger[cite: 310].
+     * </p>
      */
     public void feedCharactersInLocation() {
         if (place == null) return;
@@ -93,8 +97,11 @@ public class Chief {
 
     /**
      * Orders a Druid to brew a magic potion.
-     * [cite: 645] "demander à un druide de faire de la potion magique"
-     * * @param druid The target Druid (must be in the same location ideally).
+     * <p>
+     * [cite_start]The Chief asks a Druid to perform the concoction process[cite: 311].
+     * </p>
+     *
+     * @param druid The target Druid (must be in the same location ideally).
      */
     public void orderPotion(Druid druid) {
         if (druid != null) {
@@ -105,8 +112,11 @@ public class Chief {
 
     /**
      * Forces a specific character to drink a dose of potion.
-     * [cite: 650] "faire boire de la potion magique à des personnages"
-     * * @param target The character who must drink.
+     * <p>
+     * [cite_start]This distributes the effects of the potion to the troops[cite: 316].
+     * </p>
+     *
+     * @param target The character who must drink.
      */
     public void makeCharacterDrinkPotion(Character target) {
         if (target != null) {
@@ -117,46 +127,87 @@ public class Chief {
 
     /**
      * Transfers a character from the current location to a Battlefield or Enclosure.
-     *  "transférer un personnage... à un champ de bataille ou un enclos"
-     * * @param target The character to move.
+     * <p>
+     * [cite_start]Checks if the destination allows entry before moving the character[cite: 317].
+     * </p>
+     *
+     * @param target      The character to move.
      * @param destination The destination (must be Battlefield or Enclosure).
-     * @throws IllegalArgumentException if destination is invalid type.
      */
     public void transferCharacter(Character target, Place destination) {
-        if (target != null && destination.canEnter(target)) {
+        if (target == null) {
+            System.out.println("Target character is null.");
+            return;
+        }
+
+        if (destination.canEnter(target)) {
             place.removeCharacter(target);
             destination.addCharacter(target);
-        }
-        if (!destination.canEnter(target)) {
-            System.out.println("You can't enter " + target.getName() + " to " + destination.getName());
-            return;
+            System.out.println(this.name + " transferred " + target.getName() + " to " + destination.getName());
         } else {
-            System.out.println("Character not found in current location.");
+            System.out.println("You can't move " + target.getName() + " to " + destination.getName());
         }
     }
 
     /**
      * Creates a new character in the current location.
-     * [cite: 642] "créer un nouveau personnage dans son lieu"
-     * * @param newCharacter The character instance to add.
+     * <p>
+     * [cite_start]Adds a newly instantiated character directly to the chief's place[cite: 308].
+     * </p>
+     *
+     * @param newCharacter The character instance to add.
      */
     public void recruitCharacter(Character newCharacter) {
-        if (place != null) {
+        if (place != null && newCharacter != null) {
             place.addCharacter(newCharacter);
+            System.out.println(this.name + " recruited " + newCharacter.getName() + ".");
         }
     }
 
     // --- Getters & Setters ---
-    public String getName() { return name; }
 
+    /**
+     * Gets the name of the Chief.
+     *
+     * @return The name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Gets the age of the Chief.
+     *
+     * @return The age.
+     */
     public int getAge() {
         return age;
     }
 
+    /**
+     * Gets the gender of the Chief.
+     *
+     * @return The gender string.
+     */
     public String getGender() {
         return gender;
     }
 
-    public Place getLocation() { return place; }
-    public void setLocation(Place location) { this.place = location; }
+    /**
+     * Gets the location currently managed by the Chief.
+     *
+     * @return The location.
+     */
+    public Place getLocation() {
+        return place;
+    }
+
+    /**
+     * Sets the location managed by the Chief.
+     *
+     * @param location The new location.
+     */
+    public void setLocation(Place location) {
+        this.place = location;
+    }
 }
