@@ -1,38 +1,49 @@
 package com.asterix.model.place;
 
 import com.asterix.model.character.Chief;
-import com.asterix.model.character.Gender;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for common behaviour defined in {@link Settlement},
- * using a concrete subclass like {@link GaulVillage}.
+ * utilisant une sous-classe concrète comme {@link GaulVillage}.
+ * Correction: Ajout du paramètre Chief manquant au constructeur de GaulVillage.
  */
 class SettlementTest {
 
+    private static class TestChief extends Chief {
+        public TestChief(String name, Place place) {
+            super(name, "UNKNOWN", 0, place);
+        }
+    }
+
+
     @Test
     void setChiefAndGetChiefShouldStoreReference() {
-        Settlement village = new GaulVillage("Village gaulois", 50.0);
+        TestChief initialChief = new TestChief("Initial", null);
 
-        assertNull(village.getChief());
-        Chief chief = new Chief("Abraracourcix", "MALE", 45, village);
+        Settlement village = new GaulVillage("Village gaulois", 50.0, initialChief);
 
-        village.setChief(chief);
+        assertSame(initialChief, village.getChief(), "Le Chief initial devrait être celui passé au constructeur.");
 
-        assertSame(chief, village.getChief());
+        Chief newChief = new Chief("Abraracourcix", "MALE", 45, village);
+
+        village.setChief(newChief);
+
+        assertSame(newChief, village.getChief(), "Le nouveau Chief devrait être stocké.");
     }
 
     @Test
     void examineShouldWorkWithoutChiefAndWithChief() {
-        Settlement village = new GaulVillage("Village gaulois", 50.0);
-        
-        assertDoesNotThrow(village::examine);
+        TestChief chiefStub = new TestChief("Stub", null);
+        Settlement village = new GaulVillage("Village gaulois", 50.0, chiefStub);
+        chiefStub.setLocation(village);
 
-        Chief chief = new Chief("Abraracourcix", "MALE", 45, village);
-        village.setChief(chief);
+        assertDoesNotThrow(village::examine, "examine ne doit pas lever d'exception avec un chief défini.");
 
-        assertDoesNotThrow(village::examine);
+        village.setChief(null);
+
+        assertDoesNotThrow(village::examine, "examine ne doit pas lever d'exception quand le Chief est null.");
     }
 }
