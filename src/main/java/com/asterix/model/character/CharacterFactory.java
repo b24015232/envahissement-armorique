@@ -34,6 +34,9 @@ public class CharacterFactory {
      * @throws IllegalArgumentException If the provided character type is not supported by the factory.
      */
     public static Character createCharacter(CharacterType type, String name, int age) {
+        if (type == null) {
+            throw new IllegalArgumentException("Character type cannot be null.");
+        }
         Gender gender = random.nextBoolean() ? Gender.MALE : Gender.FEMALE;
         // Generate a random height between 1.60m and 1.90m
         double height = 1.60 + (random.nextDouble() * 0.30);
