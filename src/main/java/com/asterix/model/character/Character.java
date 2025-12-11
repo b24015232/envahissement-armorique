@@ -246,7 +246,7 @@ public abstract class Character {
     }
 
     /**
-     * [cite_start]Resolves a combat round between this character and an opponent[cite: 680, 681].
+     * Resolves a combat round between this character and an opponent.
      * <p>
      * Logic:
      * 1. Checks if both are alive and valid.
@@ -265,11 +265,32 @@ public abstract class Character {
             return;
         }
 
-        double damageToOpponent = Math.max(0.0, this.strength - opponent.stamina * 0.5);
-        double damageToSelf = Math.max(0.0, opponent.strength - this.stamina * 0.5);
+        // 1. Determine multipliers
+        // If potionLevel > 0, strength is multiplied by 5
+        double myMultiplier = (this.potionLevel > 0) ? 5.0 : 1.0;
+        double opponentMultiplier = (opponent.potionLevel > 0) ? 5.0 : 1.0;
+
+        // 2. Calculate Damage
+        double damageToOpponent = Math.max(0.0, (this.strength * myMultiplier) - opponent.stamina * 0.5);
+        double damageToSelf = Math.max(0.0, (opponent.strength * opponentMultiplier) - this.stamina * 0.5);
+
+        // 3. Apply Invincibility
+        // If potionLevel > 0, damage received is 0
+        if (this.potionLevel > 0) {
+            damageToSelf = 0.0;
+            System.out.println(this.name + " is invincible thanks to the magic potion!");
+        }
+        if (opponent.potionLevel > 0) {
+            damageToOpponent = 0.0;
+            System.out.println(opponent.getName() + " is invincible thanks to the magic potion!");
+        }
 
         opponent.health = Math.max(0.0, opponent.health - damageToOpponent);
         this.health = Math.max(0.0, this.health - damageToSelf);
+
+        // Consume potion effect after fight
+        this.consumePotionEffect();
+        opponent.consumePotionEffect();
 
         if (!opponent.isAlive()) {
             opponent.die();
@@ -280,7 +301,20 @@ public abstract class Character {
     }
 
     /**
-     * [cite_start]Heals this character by a given amount[cite: 682].
+     * Helper method to reduce potion level after an action.
+     * Decreases the level by a small amount (e.g. 0.5) to simulate duration wearing off.
+     */
+    protected void consumePotionEffect() {
+        if (this.potionLevel > 0) {
+            this.potionLevel = Math.max(0.0, this.potionLevel - 0.5);
+            if (this.potionLevel == 0) {
+                System.out.println(this.name + "'s magic potion effect has worn off.");
+            }
+        }
+    }
+
+    /**
+     * Heals this character by a given amount.
      *
      * @param amount Points of health to restore (ignored if non-positive).
      */
@@ -292,7 +326,7 @@ public abstract class Character {
     }
 
     /**
-     * [cite_start]Reduces hunger when the character consumes food[cite: 683].
+     * Reduces hunger when the character consumes food.
      *
      * @param food The food item consumed.
      */
@@ -304,7 +338,7 @@ public abstract class Character {
     }
 
     /**
-     * [cite_start]Increases the potion effect level[cite: 684].
+     * Increases the potion effect level.
      *
      * @param dose The quantity of potion consumed.
      */
@@ -316,7 +350,7 @@ public abstract class Character {
     }
 
     /**
-     * [cite_start]Sets the health to 0 and prints a death message[cite: 685].
+     * Sets the health to 0 and prints a death message.
      */
     public void die() {
         this.health = 0.0;
@@ -324,7 +358,7 @@ public abstract class Character {
     }
 
     /**
-     * [cite_start]Returns a formatted string representation of the character's statistics [cite: 663-677].
+     * Returns a formatted string representation of the character's statistics.
      *
      * @return A formatted string with stats.
      */
@@ -342,5 +376,15 @@ public abstract class Character {
                 this.stamina,
                 this.potionLevel
         );
+    }
+
+    public void passTime() {
+        if (!isAlive()) return;
+
+        // 1. Natural hunger increase (Time makes you hungry)
+        this.increaseHunger(2.0);
+
+        // 2. Potion wears off naturally over time (not just in combat)
+        this.consumePotionEffect();
     }
 }
