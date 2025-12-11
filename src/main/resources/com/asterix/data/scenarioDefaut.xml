@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InvasionTheater>
+    <name>Armorica 50 BC - Battle Test</name>
+    <places>
+
+        <place type="Battlefield">
+            <name>Great Plains of Testing</name>
+            <area>2000</area>
+            <characters>
+                <character type="Merchant">
+                    <name>Asterix</name>
+                    <age>35</age>
+                    <height>1.60</height>
+                    <strength>50.0</strength>
+                    <stamina>20.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+                <character type="Merchant">
+                    <name>Obelix</name>
+                    <age>35</age>
+                    <height>1.90</height>
+                    <strength>100.0</strength>
+                    <stamina>50.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+                <character type="Legionnary">
+                    <name>Legionary Minus</name>
+                    <age>25</age>
+                    <height>1.75</height>
+                    <strength>5.0</strength>
+                    <stamina>5.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+            </characters>
+        </place>
+
+        <place type="GaulVillage">
+            <name>The Quiet Village</name>
+            <area>500</area>
+
+            <chief>
+                <name>Abraracourcix</name>
+                <age>50</age>
+                <sex>MALE</sex>
+            </chief>
+
+            <characters>
+                <character type="Merchant">
+                    <name>Panoramix</name>
+                    <age>80</age>
+                    <height>1.80</height>
+                    <strength>1.0</strength>
+                    <stamina>10.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+            </characters>
+        </place>
+
+    </places>
+</InvasionTheater>

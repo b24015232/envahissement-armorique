@@ -28,9 +28,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # 3. Compile, Teste ET Génère la Documentation (Javadoc)
+      # 3. Compile et Teste (Lance JUnit + JaCoCo)
       - name: Build and Test with Maven
-        run: mvn -B verify javadoc:javadoc
+        run: mvn -B verify
 
       # 4. Vérifie que le rapport de qualité est généré
       - name: Check JaCoCo Report existence
