@@ -5,6 +5,7 @@ import com.asterix.model.character.Chief;
 import com.asterix.model.character.gaul.Druid;
 import com.asterix.model.character.gaul.Gaul;
 import com.asterix.model.character.roman.Roman;
+import com.asterix.model.item.Cauldron;
 import com.asterix.model.item.Food;
 import com.asterix.model.item.FoodFactory;
 import com.asterix.model.item.PerishableFood;
@@ -42,7 +43,7 @@ public class InvasionTheater {
         if (place != null) {
             this.places.add(place);
         } else {
-            System.err.println("Error: Attempted to add a null Place to the Theater.");
+            System.err.println("Error : Attempted to add a null place to the Theater.");
         }
     }
 
@@ -50,26 +51,28 @@ public class InvasionTheater {
         return new ArrayList<>(places);
     }
 
+    public void applyDailyHunger() {
+    }
+
+    public void applyRandomEvents() {
+    }
+
     /**
      * Makes time pass for all entities in the theater.
      */
     public void applyTimePassage() {
         if (this.places == null) return;
-
-        // 1. Characters age/hunger/potion decay
         for (Place place : this.places) {
             for (Character character : place.getCharacters()) {
                 character.passTime();
             }
         }
 
-        // 2. Food ages (Fresh -> Stale -> Rotten)
         this.ageFood();
     }
 
     /**
-     * Passes control to Clan Chiefs to manage their settlements.
-     * Adapted to work with your specific Chief class methods.
+     * Passes control to clan chiefs to manage their settlements.
      */
     public void triggerChiefsLogic() {
         if (this.places == null) return;
@@ -79,7 +82,7 @@ public class InvasionTheater {
             if (place instanceof Settlement) {
                 Settlement settlement = (Settlement) place;
 
-                // get the cllan chief
+                // get the clan chief
                 Chief chief = settlement.getChief();
 
                 // if no chief, create one
@@ -91,44 +94,85 @@ public class InvasionTheater {
                 chief.healCharactersInLocation();
                 chief.feedCharactersInLocation();
 
-                // potions
+                // potions logic
                 if (place instanceof GaulVillage) {
-                    // check potion
-                    boolean lowPotion = false;
-                    for (Character c : settlement.getCharacters()) {
-                        if (c instanceof Gaul && c.isAlive() && c.getPotionLevel() == 0) {
-                            lowPotion = true;
-                            break;
-                        }
-                    }
+                    handleVillagePotions((GaulVillage) place, chief);
+                }
+            }
+        }
+    }
 
-                    if (lowPotion) {
-                        // find a druid to have potion
-                        Druid foundDruid = null;
-                        for (Character c : settlement.getCharacters()) {
-                            if (c instanceof Druid) {
-                                foundDruid = (Druid) c;
-                                break;
-                            }
-                        }
+    private void handleVillagePotions(GaulVillage village, Chief chief) {
+        Druid druid = null;
+        for (Character c : village.getCharacters()) {
+            if (c instanceof Druid) {
+                druid = (Druid) c;
+                break;
+            }
+        }
 
-                        if (foundDruid != null) {
-                            System.out.println(">>> 🚨 Village Alert: Low potion! Chief orders brewing.");
+        if (druid != null) {
+            boolean needPotion = false;
+            for (Character c : village.getCharacters()) {
+                if (c instanceof Gaul && c.isAlive() && c.getPotionLevel() == 0 && !(c instanceof Druid)) {
+                    needPotion = true;
+                    break;
+                }
+            }
 
-                            // chiefs orders potion
-                            chief.orderPotion(foundDruid);
+            if (needPotion) {
+                System.out.println("Alert : Low potion ! Druid starts brewing...");
+                druid.concoctPotion();
+                Cauldron cauldron = druid.getCauldron();
 
-                            // chiefs gives potions to his troups
-                            for (Character c : settlement.getCharacters()) {
-                                if (c instanceof Gaul && c.isAlive() && !(c instanceof Druid)) {
-                                    chief.makeCharacterDrinkPotion(c);
+                if (cauldron != null) {
+                    List<Character> clonesToAdd = new ArrayList<>();
+                    List<Character> villagers = new ArrayList<>(village.getCharacters());
+
+                    for (Character c : villagers) {
+                        if (c instanceof Gaul && c.isAlive() && !(c instanceof Druid)) {
+                            String result = c.drinkPotionFromCauldron(cauldron);
+
+                            if ("DUPLICATE".equals(result)) {
+                                Character clone = createClone(c);
+                                if (clone != null) {
+                                    clonesToAdd.add(clone);
+                                    System.out.println("Clone well created : " + clone.getName());
                                 }
                             }
                         }
                     }
+                    // Ajout des clones
+                    for (Character clone : clonesToAdd) {
+                        village.addCharacter(clone);
+                    }
                 }
             }
         }
+    }
+
+    /**
+     * Creates a clone
+     */
+    private Character createClone(Character original) {
+        if (original instanceof Gaul) {
+            return new Gaul(original.getName() + " (Clone)", original.getAge(), original.getHeight(),
+                    original.getStrength(), original.getStamina(), original.getGender()) {
+                @Override
+                public double getHealth() {
+                    return 0;
+                }
+            };
+        } else if (original instanceof Roman) {
+            return new Roman(original.getName() + " (Clone)", original.getAge(), original.getHeight(),
+                    original.getStrength(), original.getStamina(), original.getGender()) {
+                @Override
+                public double getHealth() {
+                    return 0;
+                }
+            };
+        }
+        return null;
     }
 
     /**
@@ -216,13 +260,6 @@ public class InvasionTheater {
         }
     }
 
-    public void applyDailyHunger() {
-
-    }
-    public void applyRandomEvents() {
-
-    }
-
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -244,10 +281,15 @@ public class InvasionTheater {
                 } else {
                     sb.append("   👥 Characters (").append(occupants.size()).append("): ");
                     for (int i = 0; i < occupants.size(); i++) {
-                        sb.append(occupants.get(i).getName());
-                        if (occupants.get(i).getPotionLevel() > 0) {
+                        Character c = occupants.get(i);
+                        sb.append(c.getName());
+                        if (c.getPotionLevel() > 0) {
                             sb.append(" [⚡]");
                         }
+
+                        if (c.isStatue()) sb.append("Statue transformation");
+                        if (c.isLycanthrope()) sb.append("Lycanthrope transformation");
+
                         if (i < occupants.size() - 1) {
                             sb.append(", ");
                         }
