@@ -2,7 +2,7 @@ package com.asterix.model.character;
 
 import com.asterix.model.ability.Fighter;
 import com.asterix.model.item.Food;
-import com.asterix.model.item.SimpleFood;
+import com.asterix.model.item.FoodType;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,10 +40,6 @@ class CharacterTest {
             return "TestFighterCharacter{name='" + name + "'}";
         }
     }
-
-    // =========================
-    //  TESTS EXISTANTS
-    // =========================
 
     @Test
     void charactersShouldBeAliveWithFullHealthInitially() {
@@ -94,10 +90,14 @@ class CharacterTest {
                 "Hungry", 30, 1.8, 10, 10, Gender.MALE, 50.0
         );
 
-        Food food = new SimpleFood("Bread", "FOOD", 2, true, true);
+        // fix: using factory instead of manual constructor
+        Food food = FoodType.WILDBOAR.create(); // Score 15
 
         c.eat(food);
 
+        // Default logic: hunger -= 10 (in your current Character class)
+        // Or hunger -= score/2 (if you implemented advanced logic)
+        // Checking base logic from your provided Character.java: "this.hunger - 10.0"
         assertEquals(40.0, c.hunger, 0.0001);
     }
 
@@ -126,12 +126,6 @@ class CharacterTest {
         assertFalse(c.isAlive());
     }
 
-    // =========================
-    //  NOUVEAUX TESTS POUR LES BRANCHES MANQUANTES
-    // =========================
-
-    // ----- resolveFight() branches -----
-
     @Test
     void resolveFightShouldDoNothingWhenOpponentIsNull() {
         TestFighterCharacter a = new TestFighterCharacter(
@@ -140,7 +134,7 @@ class CharacterTest {
 
         double initialHealth = a.getHealth();
 
-        a.fight(null); // opponent == null → early return
+        a.fight(null); // opponent == null -> early return
 
         assertEquals(initialHealth, a.getHealth(), 0.0001);
     }
@@ -153,8 +147,8 @@ class CharacterTest {
 
         double initialHealth = a.getHealth();
 
-        // cast en Character pour pouvoir passer le même objet
-        a.fight(a); // opponent == this → early return
+        // Cast to Character to pass the same object reference
+        a.fight(a); // opponent == this -> early return
 
         assertEquals(initialHealth, a.getHealth(), 0.0001);
     }
@@ -168,10 +162,10 @@ class CharacterTest {
                 "Alive", 25, 1.7, 18, 8, Gender.FEMALE, 0.0
         );
 
-        dead.health = 0.0; // mort
+        dead.health = 0.0; // dead
         double initialAliveHealth = alive.getHealth();
 
-        dead.fight(alive); // !this.isAlive() → early return
+        dead.fight(alive); // !this.isAlive() -> early return
 
         assertEquals(initialAliveHealth, alive.getHealth(), 0.0001);
     }
@@ -188,14 +182,14 @@ class CharacterTest {
         dead.health = 0.0;
         double initialAliveHealth = alive.getHealth();
 
-        alive.fight(dead); // !opponent.isAlive() → early return
+        alive.fight(dead); // !opponent.isAlive() -> early return
 
         assertEquals(initialAliveHealth, alive.getHealth(), 0.0001);
     }
 
     @Test
     void resolveFightShouldHandleZeroDamageCase() {
-        // force un cas où damageToOpponent et damageToSelf = 0
+        // Force a case where damageToOpponent and damageToSelf = 0
         TestFighterCharacter tank1 = new TestFighterCharacter(
                 "Tank1", 30, 1.8, 1.0, 100.0, Gender.MALE, 0.0
         );
@@ -208,12 +202,11 @@ class CharacterTest {
 
         tank1.fight(tank2);
 
-        // les deux devraient avoir pris 0 dégâts (Math.max(0,...))
+        // Both should have taken 0 damage (Math.max(0,...))
         assertEquals(initialHealth1, tank1.getHealth(), 0.0001);
         assertEquals(initialHealth2, tank2.getHealth(), 0.0001);
     }
 
-    // ----- heal() branches -----
 
     @Test
     void healShouldDoNothingWhenAmountIsNonPositive() {
@@ -241,7 +234,6 @@ class CharacterTest {
         assertEquals(0.0, c.getHealth(), 0.0001);
     }
 
-    // ----- eat() branches -----
 
     @Test
     void eatShouldDoNothingWhenFoodIsNull() {
@@ -252,7 +244,7 @@ class CharacterTest {
         double initialHunger = c.hunger;
         double initialHealth = c.getHealth();
 
-        c.eat(null); // food == null → early return
+        c.eat(null); // food == null -> early return
 
         assertEquals(initialHunger, c.hunger, 0.0001);
         assertEquals(initialHealth, c.getHealth(), 0.0001);
@@ -267,14 +259,14 @@ class CharacterTest {
         c.health = 0.0;
         double initialHunger = c.hunger;
 
-        Food food = new SimpleFood("Bread", "FOOD", 2, true, true);
+        // Fix: using factory instead of manual constructor
+        Food food = FoodType.WILDBOAR.create();
 
-        c.eat(food); // !isAlive() → early return
+        c.eat(food); // !isAlive() -> early return
 
         assertEquals(initialHunger, c.hunger, 0.0001);
     }
 
-    // ----- drinkPotion() branches -----
 
     @Test
     void drinkPotionShouldDoNothingWhenDoseIsNonPositive() {
@@ -296,14 +288,14 @@ class CharacterTest {
 
         c.health = 0.0;
 
-        c.drinkPotion(2.0); // !isAlive() → early return
+        c.drinkPotion(2.0); // !isAlive() -> early return
 
         assertEquals(0.0, c.getPotionLevel(), 0.0001);
     }
 
     @Test
     void resolveFightShouldCallDieWhenOpponentIsKilled() {
-        // Attaquant très fort, défenseur fragile (stamina = 0)
+        // Very strong attacker, fragile defender (stamina = 0)
         TestFighterCharacter attacker = new TestFighterCharacter(
                 "Attacker", 30, 1.8, 200.0, 10.0, Gender.MALE, 0.0
         );
@@ -311,21 +303,21 @@ class CharacterTest {
                 "Victim", 25, 1.7, 1.0, 0.0, Gender.FEMALE, 0.0
         );
 
-        // Sanity check: les deux sont vivants avant le combat
+        // Sanity check: both are alive before combat
         assertTrue(attacker.isAlive());
         assertTrue(victim.isAlive());
 
         attacker.fight(victim);
 
-        // Le victim doit être mort → branche (!opponent.isAlive()) vraie,
-        // donc opponent.die() a été appelée.
+        // The victim must be dead -> branch (!opponent.isAlive()) true,
+        // so opponent.die() was called.
         assertFalse(victim.isAlive());
         assertEquals(0.0, victim.getHealth(), 0.0001);
     }
 
     @Test
     void resolveFightShouldCallDieWhenThisIsKilled() {
-        // Attaquant fragile, défenseur très fort
+        // Fragile attacker, very strong defender
         TestFighterCharacter weak = new TestFighterCharacter(
                 "Weak", 30, 1.8, 1.0, 0.0, Gender.MALE, 0.0
         );
@@ -336,13 +328,12 @@ class CharacterTest {
         assertTrue(weak.isAlive());
         assertTrue(strong.isAlive());
 
-        // Weak attaque Strong, mais se fait éclater en retour
+        // Weak attacks Strong, but gets destroyed in return
         weak.fight(strong);
 
-        // Weak doit être mort → branche (!this.isAlive()) vraie,
-        // donc this.die() a été appelée.
+        // Weak must be dead -> branch (!this.isAlive()) true,
+        // so this.die() was called.
         assertFalse(weak.isAlive());
         assertEquals(0.0, weak.getHealth(), 0.0001);
     }
-
 }
