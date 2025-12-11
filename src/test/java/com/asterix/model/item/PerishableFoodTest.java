@@ -1,80 +1,52 @@
 package com.asterix.model.item;
 
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class PerishableFoodTest {
 
     @Test
     void perishableFoodShouldHaveInitialState() {
-        // given
         FoodState initial = new FreshState();
 
-        // when
-        PerishableFood food = new PerishableFood(
-                "Strawberry",
-                "FRUIT",
-                initial,
-                true,   // Gaul can eat
-                true    // Roman can eat
-        );
-
-        // then
+        // When : STRAWBERRY is perishable
+        PerishableFood food = new PerishableFood(FoodType.STRAWBERRY, initial);
         assertEquals("Strawberry", food.getName());
         assertEquals("FRUIT", food.getType());
         assertEquals("Fresh", food.getCurrentStatus());
-        assertEquals(10, food.getScore());
-        assertTrue(food.getState() instanceof FreshState);
-        assertTrue(food.canBeEatenByGaul());
-        assertTrue(food.canBeEatenByRoman());
+        assertEquals(10, food.getScore()); // FreshState score
+        assertTrue(food.isFresh()); // checking the new method
     }
 
     @Test
     void perishableFoodShouldChangeStateOverTime() {
-        // given
-        PerishableFood food = new PerishableFood(
-                "Fish",
-                "MEAT",
-                new FreshState(),
-                true,   // Gaul can eat
-                true    // Roman can eat
-        );
+        // Given : fresh fish
+        PerishableFood food = new PerishableFood(FoodType.FISH, new FreshState());
 
-        // when - 1st time: Fresh -> PartiallyFresh
+        // passing from fresh to mid state
         food.passTime();
 
-        // then
         assertEquals("Average", food.getCurrentStatus());
         assertEquals(5, food.getScore());
-        assertTrue(food.getState() instanceof PartiallyFreshState);
+        assertFalse(food.isFresh());
 
-        // when - 2nd time: PartiallyFresh -> Rotten
+        // from mid to rotten
         food.passTime();
 
-        // then
         assertEquals("Rotten", food.getCurrentStatus());
         assertEquals(-5, food.getScore());
-        assertTrue(food.getState() instanceof RottenState);
     }
 
     @Test
     void perishableFoodStateCanBeForcedManually() {
-        // given
-        PerishableFood food = new PerishableFood(
-                "Honey",
-                "SWEET",
-                new FreshState(),
-                true,   // Gaul can eat
-                true    // Roman can eat
-        );
 
-        // when
+        PerishableFood food = new PerishableFood(FoodType.WILDBOAR, new FreshState());
+
+        // When
         food.setState(new RottenState());
 
-        // then
+        // Then
         assertEquals("Rotten", food.getCurrentStatus());
         assertEquals(-5, food.getScore());
-        assertTrue(food.getState() instanceof RottenState);
     }
 }
