@@ -7,7 +7,8 @@ import com.asterix.model.character.Gender;
  * Abstract base class for all Roman fighters (legionaries, generals, ...).
  * <p>
  * A {@code Soldier} is a Roman character that can engage in combat.
- * Concrete subclasses must implement the {@link #fight} method.
+ * Concrete subclasses must implement the {@link #fight(com.asterix.model.character.Character)} method
+ * defined in the {@link Fighter} interface.
  * </p>
  */
 public abstract class Soldier extends Roman implements Fighter {
@@ -31,6 +32,11 @@ public abstract class Soldier extends Roman implements Fighter {
         super(name, age, height, strength, stamina, gender);
     }
 
+    /**
+     * Returns a string representation of the Soldier.
+     *
+     * @return A string containing the class name "Soldier" followed by the Roman details.
+     */
     @Override
     public String toString() {
         return "Soldier " + super.toString();

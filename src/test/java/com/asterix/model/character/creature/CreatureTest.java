@@ -28,6 +28,14 @@ class CreatureTest {
         public String toString() {
             return super.toString();
         }
+
+        /**
+         * @return
+         */
+        @Override
+        public double getHealth() {
+            return 0;
+        }
     }
 
     @Test

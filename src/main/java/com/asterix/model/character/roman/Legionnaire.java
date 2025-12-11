@@ -34,7 +34,7 @@ public class Legionnaire extends Soldier {
      * Engages in combat with another character.
      * <p>
      * For now, this method only prints a message. Actual combat rules
-     * (damage, stamina cost, etc.) can be added later.
+     * (damage, stamina cost, etc.) are handled by the parent method.
      * </p>
      *
      * @param opponent the character to fight against
@@ -50,7 +50,23 @@ public class Legionnaire extends Soldier {
         resolveFight(opponent);
     }
 
+    /**
+     * Returns a string representation of the Legionnaire.
+     *
+     * @return A string containing the class name "Legionnaire" followed by the Soldier details.
+     */
+    @Override
     public String toString() {
         return "Legionnaire " + super.toString();
+    }
+
+    /**
+     * Returns the current health points of the legionnaire.
+     *
+     * @return The current health value.
+     */
+    @Override
+    public double getHealth() {
+        return this.health;
     }
 }

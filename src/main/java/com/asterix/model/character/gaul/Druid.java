@@ -15,16 +15,46 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Represents a Druid in the Gaulish village (e.g., Panoramix).
+ * <p>
+ * The Druid is a central character with multiple capabilities:
+ * he works (gathers mistletoe), fights when necessary, and provides leadership.
+ * Most importantly, he is the only one capable of brewing the magic potion.
+ * </p>
+ * Implements {@link Worker}, {@link Fighter}, and {@link Leader}.
+ */
 public class Druid extends Gaul implements Worker, Fighter, Leader {
 
+    /**
+     * The cauldron currently being used by the Druid.
+     */
     private Cauldron currentCauldron;
     private final Random random;
 
+    /**
+     * Constructs a new Druid character.
+     *
+     * @param name     The name of the druid.
+     * @param age      The age of the druid.
+     * @param height   The height of the druid in meters.
+     * @param strength The physical strength of the druid.
+     * @param stamina  The stamina/endurance of the druid.
+     * @param gender   The gender of the druid.
+     */
     public Druid(String name, int age, double height, double strength, double stamina, Gender gender) {
         super(name, age, height, strength, stamina, gender);
         this.random = new Random();
     }
 
+    /**
+     * Prepares a fresh cauldron of magic potion.
+     * <p>
+     * This unique ability involves mixing specific ingredients.
+     * To satisfy the TD requirements, this method randomly selects a recipe variation
+     * (Standard, Nourishing, Duplication, or Lycanthropy) to simulate different outcomes.
+     * </p>
+     */
     public void concoctPotion() {
         System.out.println(this.getName() + " lights a fire under the cauldron...");
         this.currentCauldron = new Cauldron();
@@ -75,7 +105,7 @@ public class Druid extends Gaul implements Worker, Fighter, Leader {
             System.out.println("Duplication potion");
         }
         else {
-            // metamorphosis into lycantrhope potion
+            // Metamorphosis Potion (Lycanthropy)
             currentCauldron.addIngredient(FoodType.ROCK_OIL.create());
             currentCauldron.addIngredient(new Food(FoodType.MISTLETOE) {
                 @Override public String getName() {
@@ -91,10 +121,13 @@ public class Druid extends Gaul implements Worker, Fighter, Leader {
         this.currentCauldron.brew();
     }
 
+    /**
+     * Serves a dose of magic potion to a fellow Gaul.
+     *
+     */
     public int gatherIngredients(GaulVillage village) {
         if (village == null) return 0;
 
-        // On récupère le chaudron du village (celui qui est commun)
         Cauldron villageCauldron = village.getCauldron();
         List<Food> groundItems = village.getFoods();
 
@@ -111,15 +144,10 @@ public class Druid extends Gaul implements Worker, Fighter, Leader {
         Iterator<Food> it = groundItems.iterator();
         while (it.hasNext()) {
             Food item = it.next();
-
-            // Si l'objet est un ingrédient valide pour la potion
             if (validIngredients.contains(item.getName())) {
                 System.out.println("🌿 " + this.getName() + " ramasse : " + item.getName());
-
-                // 1. Hop, dans le chaudron !
                 villageCauldron.addIngredient(item);
 
-                // 2. On le retire du sol
                 it.remove();
 
                 gatheredCount++;
@@ -133,19 +161,35 @@ public class Druid extends Gaul implements Worker, Fighter, Leader {
             gaul.drinkPotionFromCauldron(currentCauldron);
         }
     }
+
+    /**
+     * Getter for the current cauldron.
+     *
+     * @return The active cauldron instance.
+     */
     public Cauldron getCauldron() {
         return this.currentCauldron;
     }
 
-    //some narration
+    /**
+     * Implementation of the {@link Worker} interface.
+     */
     @Override public void work() {
         System.out.println(this.getName() + " gathers mistletoe.");
     }
 
+    /**
+     * Implementation of the {@link Leader} interface.
+     */
     @Override public void command() {
         System.out.println(this.getName() + " raises a hand.");
     }
 
+    /**
+     * Implementation of the {@link Fighter} interface.
+     *
+     * @param opponent The character to fight against.
+     */
     @Override public void fight(Character opponent) {
         resolveFight(opponent);
     }

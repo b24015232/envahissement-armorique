@@ -1,6 +1,7 @@
 package com.asterix.model.character.roman;
 
 import com.asterix.model.ability.Leader;
+import com.asterix.model.character.Character;
 import com.asterix.model.character.Gender;
 
 /**
@@ -43,8 +44,23 @@ public class Prefect extends Roman implements Leader {
         System.out.println(name + " (Prefect) manages the Roman city and issues civil orders.");
     }
 
+    /**
+     * Returns a string representation of the Prefect.
+     *
+     * @return A string containing the class name "Prefect" followed by the Roman details.
+     */
     @Override
     public String toString() {
-        return "Perfect " + super.toString();
+        return "Prefect " + super.toString();
+    }
+
+    /**
+     * Returns the current health points of the prefect.
+     *
+     * @return The current health value.
+     */
+    @Override
+    public double getHealth() {
+        return this.health;
     }
 }
