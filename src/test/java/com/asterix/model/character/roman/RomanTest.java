@@ -26,14 +26,6 @@ class RomanTest {
             super(name, age, height, strength, stamina, gender);
         }
 
-        // Helpers to access protected hunger from tests
-        void setHunger(double value) {
-            this.hunger = value;
-        }
-
-        double getHunger() {
-            return this.hunger;
-        }
     }
 
     @Test
