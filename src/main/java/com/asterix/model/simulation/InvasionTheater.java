@@ -1,6 +1,8 @@
 package com.asterix.model.simulation;
 
 import com.asterix.model.character.Character;
+import com.asterix.model.character.Chief;
+import com.asterix.model.character.gaul.Druid;
 import com.asterix.model.character.gaul.Gaul;
 import com.asterix.model.character.roman.Roman;
 import com.asterix.model.item.Food;
@@ -8,15 +10,16 @@ import com.asterix.model.item.FoodFactory;
 import com.asterix.model.item.PerishableFood;
 import com.asterix.model.place.Battlefield;
 import com.asterix.model.place.Place;
+import com.asterix.model.place.Settlement;
+import com.asterix.model.place.GaulVillage;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 /**
- * [cite_start]Represents the invasion theater where the simulation takes place[cite: 101].
+ * Represents the invasion theater where the simulation takes place.
  * Acts as the main facade for the domain model.
  */
 public class InvasionTheater {
@@ -33,7 +36,7 @@ public class InvasionTheater {
         this.random = new Random();
     }
 
-    public String getName() { return name; } // previously getNom
+    public String getName() { return name; }
 
     public void addPlace(Place place) {
         if (place != null) {
@@ -43,37 +46,91 @@ public class InvasionTheater {
         }
     }
 
-    /**
-     * Retrieves the list of places.
-     * <p>
-     * This method returns a defensive copy of the list. Modifying the returned
-     * list will not affect the internal state of this object.
-     *
-     * @return a new List containing the Place objects.
-     */
     public List<Place> getPlaces() {
         return new ArrayList<>(places);
     }
 
     /**
-     * Systematically increases the hunger of ALL characters in ALL places.
-     * <p>
-     * This replaces the random event logic for hunger.
-     * Every turn, every character gets hungrier.
-     * </p>
+     * Makes time pass for all entities in the theater.
      */
-    public void applyDailyHunger() {
+    public void applyTimePassage() {
         if (this.places == null) return;
 
-        // Stream through all places and all characters
-        this.places.stream()
-                .flatMap(place -> place.getCharacters().stream())
-                .forEach(character -> {
-                    // Increase hunger by 10 points every turn
-                    // Ensure Character class has increaseHunger(int amount)
-                    character.increaseHunger(10);
-                });
+        // 1. Characters age/hunger/potion decay
+        for (Place place : this.places) {
+            for (Character character : place.getCharacters()) {
+                character.passTime();
+            }
+        }
+
+        // 2. Food ages (Fresh -> Stale -> Rotten)
+        this.ageFood();
     }
+
+    /**
+     * Passes control to Clan Chiefs to manage their settlements.
+     * Adapted to work with your specific Chief class methods.
+     */
+    public void triggerChiefsLogic() {
+        if (this.places == null) return;
+
+        for (Place place : this.places) {
+            // Only Settlements have chiefs logic
+            if (place instanceof Settlement) {
+                Settlement settlement = (Settlement) place;
+
+                // get the cllan chief
+                Chief chief = settlement.getChief();
+
+                // if no chief, create one
+                if (chief == null) {
+                    chief = new Chief("Automated Chief", "MALE", 50, settlement);
+                }
+
+                // generic chief methods
+                chief.healCharactersInLocation();
+                chief.feedCharactersInLocation();
+
+                // potions
+                if (place instanceof GaulVillage) {
+                    // check potion
+                    boolean lowPotion = false;
+                    for (Character c : settlement.getCharacters()) {
+                        if (c instanceof Gaul && c.isAlive() && c.getPotionLevel() == 0) {
+                            lowPotion = true;
+                            break;
+                        }
+                    }
+
+                    if (lowPotion) {
+                        // find a druid to have potion
+                        Druid foundDruid = null;
+                        for (Character c : settlement.getCharacters()) {
+                            if (c instanceof Druid) {
+                                foundDruid = (Druid) c;
+                                break;
+                            }
+                        }
+
+                        if (foundDruid != null) {
+                            System.out.println(">>> 🚨 Village Alert: Low potion! Chief orders brewing.");
+
+                            // chiefs orders potion
+                            chief.orderPotion(foundDruid);
+
+                            // chiefs gives potions to his troups
+                            for (Character c : settlement.getCharacters()) {
+                                if (c instanceof Gaul && c.isAlive() && !(c instanceof Druid)) {
+                                    chief.makeCharacterDrinkPotion(c);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Manages combat logic between characters in Battlefields.
      */
@@ -87,8 +144,18 @@ public class InvasionTheater {
 
                 if (combatants.size() < 2) continue;
 
-                List<Character> gaulCamp = combatants.stream().filter(c -> c instanceof Gaul && c.isAlive()).collect(Collectors.toList());
-                List<Character> romanCamp = combatants.stream().filter(c -> c instanceof Roman && c.isAlive()).collect(Collectors.toList());
+                List<Character> gaulCamp = new ArrayList<>();
+                List<Character> romanCamp = new ArrayList<>();
+
+                for (Character c : combatants) {
+                    if (c.isAlive()) {
+                        if (c instanceof Gaul) {
+                            gaulCamp.add(c);
+                        } else if (c instanceof Roman) {
+                            romanCamp.add(c);
+                        }
+                    }
+                }
 
                 Collections.shuffle(gaulCamp);
                 Collections.shuffle(romanCamp);
@@ -101,47 +168,23 @@ public class InvasionTheater {
                     gaul.resolveFight(roman);
                 }
 
-                List<Character> casualties = combatants.stream()
-                        .filter(c -> !c.isAlive())
-                        .collect(Collectors.toList());
+                List<Character> casualties = new ArrayList<>();
+                for (Character c : combatants) {
+                    if (!c.isAlive()) {
+                        casualties.add(c);
+                    }
+                }
 
-                casualties.forEach(dead -> {
+                for (Character dead : casualties) {
                     System.out.println("✝️ " + dead.getName() + " has fallen at " + battlefield.getName());
                     battlefield.removeCharacter(dead);
-                });
+                }
             }
         }
     }
 
     /**
-     * Randomly modifies the state of characters (Hunger, Potion, Health).
-     */
-    public void applyRandomEvents() {
-        if (places == null) return;
-
-        places.stream()
-                .flatMap(place -> place.getCharacters().stream())
-                .forEach(character -> {
-                    if (random.nextDouble() < RANDOM_EVENT_PROBABILITY) {
-                        int eventType = random.nextInt(3);
-                        switch (eventType) {
-                            case 0:
-                                break;
-                            case 1:
-                                break;
-                            case 2:
-                                break;
-                        }
-                    }
-                });
-    }
-
-    /**
      * Generates food in every eligible location at every turn.
-     * <p>
-     * Removed the random probability check. Food now spawns guaranteed.
-     * Constraint: Still excludes Battlefields.
-     * </p>
      */
     public void generateFood() {
         if (this.places == null) return;
@@ -151,7 +194,6 @@ public class InvasionTheater {
                 continue;
             }
 
-            // SYSTEMATIC SPAWN (No random check)
             Food newFood = FoodFactory.createRandomFood();
             place.addFood(newFood);
 
@@ -174,23 +216,28 @@ public class InvasionTheater {
         }
     }
 
+    public void applyDailyHunger() {
+
+    }
+    public void applyRandomEvents() {
+
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("=== Invasion Theater: ").append(name).append(" ===\n"); // [cite: 662]
+        sb.append("=== Invasion Theater: ").append(name).append(" ===\n");
 
         if (places == null || places.isEmpty()) {
             sb.append("No location configured.\n");
         } else {
             for (Place place : places) {
-                // 1. Display Place Name and Type
                 sb.append("📍 Location: ").append(place.getName());
                 if (place instanceof Battlefield) {
                     sb.append(" [⚔️ BATTLEFIELD]");
                 }
                 sb.append("\n");
 
-                // 2. Display Characters [cite: 663]
                 List<Character> occupants = place.getCharacters();
                 if (occupants.isEmpty()) {
                     sb.append("   (No characters present)\n");
@@ -198,6 +245,9 @@ public class InvasionTheater {
                     sb.append("   👥 Characters (").append(occupants.size()).append("): ");
                     for (int i = 0; i < occupants.size(); i++) {
                         sb.append(occupants.get(i).getName());
+                        if (occupants.get(i).getPotionLevel() > 0) {
+                            sb.append(" [⚡]");
+                        }
                         if (i < occupants.size() - 1) {
                             sb.append(", ");
                         }
@@ -205,15 +255,12 @@ public class InvasionTheater {
                     sb.append("\n");
                 }
 
-                // 3. Display Foods (Added Feature)
-                // Assumes Place has a getter: public List<Food> getFoods();
                 List<Food> foodItems = place.getFoods();
                 if (foodItems.isEmpty()) {
                     sb.append("   (No food items)\n");
                 } else {
                     sb.append("   🍎 Food items (").append(foodItems.size()).append("): ");
                     for (int i = 0; i < foodItems.size(); i++) {
-                        // getName() will include state description (e.g., "Fish (Stale)") thanks to State Pattern
                         sb.append(foodItems.get(i).getName());
                         if (i < foodItems.size() - 1) {
                             sb.append(", ");
@@ -221,7 +268,6 @@ public class InvasionTheater {
                     }
                     sb.append("\n");
                 }
-
                 sb.append("--------------------------------------------------\n");
             }
         }
