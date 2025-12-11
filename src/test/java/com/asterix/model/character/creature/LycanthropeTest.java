@@ -26,13 +26,6 @@ class LycanthropeTest {
             return "DummyOpponent{name='" + name + "'}";
         }
 
-        /**
-         * @return
-         */
-        @Override
-        public double getHealth() {
-            return 0;
-        }
     }
 
     @Test

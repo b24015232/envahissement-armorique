@@ -10,9 +10,25 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for {@link CreatureEnclosure}.
+ * <p>
+ * This test suite specifically verifies the containment rules of the
+ * {@code CreatureEnclosure} class, ensuring it only allows instances
+ * of the {@code Lycanthrope} (or potentially other Creature subclasses)
+ * while rejecting other character types like Gauls and Romans.
  */
 class CreatureEnclosureTest {
 
+    /**
+     * Verifies that the {@code CreatureEnclosure} correctly restricts
+     * character additions:
+     * <ul>
+     * <li>It should successfully accept {@code Lycanthrope} (Creature).</li>
+     * <li>It should throw an {@code IllegalArgumentException} when attempting
+     * to add a {@code BlackSmith} (Gaul).</li>
+     * <li>It should throw an {@code IllegalArgumentException} when attempting
+     * to add a {@code Legionnaire} (Roman).</li>
+     * </ul>
+     */
     @Test
     void creatureEnclosureShouldAllowOnlyCreatures() {
         CreatureEnclosure enclosure = new CreatureEnclosure("Enclos", 60.0);

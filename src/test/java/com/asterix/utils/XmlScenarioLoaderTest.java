@@ -103,7 +103,7 @@ class XmlScenarioLoaderTest {
         Place battlefield = theater.getPlaces().stream().filter(p -> p.getName().equals("Plaine Romaine")).findFirst().orElse(null);
 
         assertNotNull(village);
-        assertTrue(village instanceof GaulVillage);
+        assertInstanceOf(GaulVillage.class, village);
         assertEquals(50.0, village.getArea());
         assertEquals(1, village.getCharacters().size());
 
@@ -113,7 +113,7 @@ class XmlScenarioLoaderTest {
         assertSame(village, chief.getLocation());
 
         assertNotNull(battlefield);
-        assertTrue(battlefield instanceof Battlefield);
+        assertInstanceOf(Battlefield.class, battlefield);
         assertEquals(200.0, battlefield.getArea());
         assertEquals(1, battlefield.getCharacters().size());
     }
@@ -159,7 +159,7 @@ class XmlScenarioLoaderTest {
 
         Place unknownPlace = theater.getPlaces().stream().filter(p -> p.getName().equals("Village Gaulois")).findFirst().orElse(null);
         assertNotNull(unknownPlace);
-        assertTrue(unknownPlace instanceof GaulVillage);
+        assertInstanceOf(GaulVillage.class, unknownPlace);
     }
 
     @Test

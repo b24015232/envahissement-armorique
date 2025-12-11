@@ -92,24 +92,6 @@ class InvasionTheaterTest {
         assertEquals(initialSize, theater.getPlaces().size());
     }
 
-//    @Test
-//    void handleFightsShouldPairGaulsAndRomansAndRemoveDead() {
-//        InvasionTheater theater = new InvasionTheater("Armorica");
-//        Battlefield battlefield = new Battlefield("Battlefield", 100.0);
-//        theater.addPlace(battlefield);
-//
-//        FakeWeakGaul weakGaul = new FakeWeakGaul("Weakix");
-//        FakeStrongRoman strongRoman = new FakeStrongRoman("Fortus");
-//
-//        battlefield.addCharacter(weakGaul);
-//        battlefield.addCharacter(strongRoman);
-//
-//        theater.handleFights();
-//
-//        List<Character> remaining = battlefield.getCharacters();
-//        assertEquals(1, remaining.size());
-//        assertSame(strongRoman, remaining.get(0));
-//    }
 
     @Test
     void toStringShouldHandleNoPlaces() {

@@ -11,23 +11,36 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for {@link GaulVillage}.
- * Correction: Ajout du paramètre Chief manquant au constructeur de GaulVillage.
+ * <p>
+ * This test suite focuses on verifying the core constraints of the
+ * {@code GaulVillage} concerning character placement, ensuring it
+ * correctly allows Gauls and Creatures while rejecting Romans.
  */
 class GaulVillageTest {
 
 
+    /**
+     * A minimal test implementation of {@link Chief} used as a stub
+     * for the {@code GaulVillage} constructor, as a village must have a chief.
+     */
     private static class TestChief extends Chief {
         public TestChief(String name, Place place) {
             super(name, "UNKNOWN", 0, place);
         }
     }
 
+    /**
+     * Verifies that the {@code GaulVillage} successfully accepts
+     * both Gaulish characters (e.g., {@code BlackSmith}) and Creature
+     * characters (e.g., {@code Lycanthrope}) without throwing an exception.
+     */
     @Test
     void gaulVillageShouldAllowGaulsAndCreatures() {
         TestChief chiefStub = new TestChief("Abraracourcix", null);
 
         GaulVillage village = new GaulVillage("Village gaulois", 50.0, chiefStub);
 
+        // Link the chief to the newly created village
         chiefStub.setLocation(village);
 
         BlackSmith gaul = new BlackSmith("Astérix", 35, 1.70, 20.0, 15.0, Gender.MALE);
@@ -37,12 +50,18 @@ class GaulVillageTest {
         assertDoesNotThrow(() -> village.addCharacter(creature));
     }
 
+    /**
+     * Verifies that the {@code GaulVillage} rejects characters
+     * categorized as Romans (e.g., {@code Legionnaire}) by throwing
+     * an {@code IllegalArgumentException}.
+     */
     @Test
     void gaulVillageShouldRejectRomans() {
         TestChief chiefStub = new TestChief("Abraracourcix", null);
 
         GaulVillage village = new GaulVillage("Village gaulois", 50.0, chiefStub);
 
+        // Link the chief to the newly created village
         chiefStub.setLocation(village);
 
         Legionnaire roman = new Legionnaire("Fortus", 30, 1.80, 18.0, 12.0, Gender.MALE);

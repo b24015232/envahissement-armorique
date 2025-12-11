@@ -3,19 +3,53 @@ package com.asterix.model.character.gaul;
 import com.asterix.model.ability.Fighter;
 import com.asterix.model.ability.Leader;
 import com.asterix.model.ability.Worker;
+import com.asterix.model.character.Character;
 import com.asterix.model.character.Gender;
+import com.asterix.model.item.Cauldron;
+import com.asterix.model.item.FoodType;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for the {@link Druid} class.
- * <p>
- * This class validates the complex behavior of the Druid, who is a versatile character
- * implementing three interfaces: {@link Worker}, {@link Fighter}, and {@link Leader}.
- * It also tests the unique ability to brew and serve magic potion.
- * </p>
  */
 public class DruidTest {
+
+
+    private static Druid createInstantiableDruid(String name, double initialHealth) {
+        return new Druid(name, 45, 1.70, 5.0, 10.0, Gender.MALE) {
+            private double currentHealth = initialHealth;
+
+            @Override
+            public double getHealth() {
+                return currentHealth;
+            }
+
+            @Override
+            public String toString() {
+                return String.format(
+                        "Druid | %-15s | %-6s | Age: %-3d | 📏 %.2fm | ❤️ HP: %-5.1f | 🍖 Hunger: %-5.1f | 💪 Str: %-5.1f | 🏃 Sta: %-5.1f | 🧪 Potion: %.1f",
+                        this.getName(),
+                        this.getGender().toString(),
+                        this.getAge(),
+                        this.getHeight(),
+                        this.getHealth(),
+                        this.getHunger(),
+                        this.getStrength(),
+                        this.getStamina(),
+                        this.getPotionLevel()
+                );
+            }
+        };
+    }
+
+    private static Gaul createInstantiableGaul(String name) {
+        return new Gaul(name, 35, 1.60, 15.0, 20.0, Gender.MALE) {
+            @Override
+            public double getHealth() { return Character.MAX_HEALTH; }
+        };
+    }
 
     /**
      * Verifies the specific abilities of the Druid, particularly potion concoction
@@ -23,44 +57,48 @@ public class DruidTest {
      */
     @Test
     public void testDruidCapabilities() {
-        // Arrange : creating Nevotix with anonymous class to handle abstract methods
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
-            @Override
-            public double getHealth() {
-                return this.health;
-            }
-        };
+        Druid nevotix = createInstantiableDruid("Nevotix", 100.0);
 
-        // Act & assert 1: Specific method
         assertDoesNotThrow(() -> nevotix.concoctPotion(), "Nevotix should be able to concoct potion");
 
-        // Act & assert 2: polymorphism checks
-        assertTrue(nevotix instanceof Worker, "Druid must be a worker");
-        assertTrue(nevotix instanceof Fighter, "Druid must be a fighter");
-        assertTrue(nevotix instanceof Leader, "Druid must be a leader");
+        assertInstanceOf(Worker.class, nevotix, "Druid must be a worker");
+        assertInstanceOf(Fighter.class, nevotix, "Druid must be a fighter");
+        assertInstanceOf(Leader.class, nevotix, "Druid must be a leader");
 
-        // Act & assert 3: Check toString()
-        assertTrue(nevotix.toString().contains("Druid"), "ToString should work and contain class name");
+        assertTrue(nevotix.toString().contains("Druid"), "ToString should work and contain class name (if implemented).");
+        assertTrue(nevotix.toString().contains("Age: 45"), "ToString must contain the age value.");
     }
+
+    /**
+     * Ensures that the potion brewing process is initiated and basic ingredients are added.
+     */
+    @Test
+    public void testConcoctPotionInitialization() {
+        Druid nevotix = createInstantiableDruid("Nevotix", 100.0);
+
+        nevotix.concoctPotion();
+        Cauldron cauldron = nevotix.getCauldron();
+
+        assertNotNull(cauldron, "Cauldron must be initialized after concoctPotion.");
+
+        assertTrue(cauldron.getIngredients().size() >= 4, "Cauldron must contain at least 4 ingredients (3 base + 1 random).");
+
+        assertTrue(cauldron.getIngredients().stream()
+                        .anyMatch(f -> f.getName().contains("Mistletoe")),
+                "Cauldron must contain Mistletoe ingredient.");
+    }
+
 
     /**
      * Ensures that all action methods (work, command, fight) execute without errors.
      */
     @Test
     public void testDruidActions() {
-        // Fix: Implement abstract method getHealth()
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
-            @Override
-            public double getHealth() {
-                return this.health;
-            }
-        };
+        Druid nevotix = createInstantiableDruid("Nevotix", 100.0);
 
-        // checking that methods execute without error
         assertDoesNotThrow(() -> nevotix.work());
         assertDoesNotThrow(() -> nevotix.command());
 
-        // simulating a fight against himself for non-null testing
         assertDoesNotThrow(() -> nevotix.fight(nevotix));
     }
 
@@ -70,16 +108,8 @@ public class DruidTest {
     @Test
     public void testServePotionSuccess() {
         // Arrange
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
-            @Override
-            public double getHealth() { return this.health; }
-        };
-
-        // We use an anonymous Gaul instead of Merchant
-        Gaul asterix = new Gaul("Asterix", 35, 1.60, 15.0, 20.0, Gender.MALE) {
-            @Override
-            public double getHealth() { return this.health; }
-        };
+        Druid nevotix = createInstantiableDruid("Nevotix", 100.0);
+        Gaul asterix = createInstantiableGaul("Asterix");
 
         double initialPotionLevel = asterix.getPotionLevel();
 
@@ -87,7 +117,7 @@ public class DruidTest {
         nevotix.concoctPotion();   // 1. Brew the potion
         nevotix.servePotion(asterix); // 2. Serve a ladle
 
-        // Assert
+        // Assert: If the base class Gaul works, the potion level should have increased by 1.0.
         assertEquals(initialPotionLevel + 1.0, asterix.getPotionLevel(), 0.0001,
                 "The Gaul should have received exactly one dose of potion");
     }
@@ -98,15 +128,8 @@ public class DruidTest {
     @Test
     public void testServePotionWithoutBrewing() {
         // Arrange
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
-            @Override
-            public double getHealth() { return this.health; }
-        };
-
-        Gaul clarix = new Gaul("Clarix", 35, 1.90, 100.0, 50.0, Gender.FEMALE) {
-            @Override
-            public double getHealth() { return this.health; }
-        };
+        Druid nevotix = createInstantiableDruid("Nevotix", 100.0);
+        Gaul clarix = createInstantiableGaul("Clarix");
 
         double initialPotionLevel = clarix.getPotionLevel();
 

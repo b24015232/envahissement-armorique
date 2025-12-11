@@ -5,17 +5,20 @@ import com.asterix.model.item.Food;
 import com.asterix.model.item.FoodType;
 import org.junit.jupiter.api.Test;
 
-import java.util.Locale; // Added import for robust formatting check
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests for Roman-specific behaviour (especially eating rules and potion).
+ * Tests for Roman-specific behavior defined in the abstract {@link Roman} class,
+ * focusing particularly on eating rules (checking {@code romanCanEat} flags),
+ * potion consumption, and the detailed string representation.
  */
 class RomanTest {
 
     /**
-     * Simple concrete Roman implementation used for tests.
+     * Simple concrete {@code Roman} implementation used for testing.
+     * Overrides {@code toString()} for detailed output verification.
      */
     private static class TestRoman extends Roman {
 
@@ -28,10 +31,15 @@ class RomanTest {
             super(name, age, height, strength, stamina, gender);
         }
 
+        /**
+         * Provides a formatted string containing all character details.
+         *
+         * @return A detailed string representation of the Roman character.
+         */
         @Override
         public String toString() {
-            // NOTE: This format uses system locale for decimals (e.g., comma in France)
-            return String.format(
+            // NOTE: Using Locale.ROOT for formatting ensures consistency regardless of system locale.
+            return String.format(Locale.ROOT,
                     "%-15s | %-6s | Age: %-3d | 📏 %.2fm | ❤️ HP: %-5.1f | 🍖 Hunger: %-5.1f | 💪 Str: %-5.1f | 🏃 Sta: %-5.1f | 🧪 Potion: %.1f",
                     this.getName(),
                     this.getGender().toString(),
@@ -46,6 +54,10 @@ class RomanTest {
         }
     }
 
+    /**
+     * Tests that the {@code eat()} method safely ignores a {@code null}
+     * food object, resulting in no change to the Roman's health or hunger.
+     */
     @Test
     void romanShouldIgnoreNullFood() {
         TestRoman roman = new TestRoman("Nullius", 30, 1.8, 15, 10, Gender.MALE);
@@ -57,6 +69,11 @@ class RomanTest {
         assertEquals(initialHunger, roman.getHunger(), 0.0001);
     }
 
+    /**
+     * Tests that the {@code eat()} method prevents the Roman from consuming
+     * food explicitly forbidden for them (e.g., WILDBOAR, where
+     * {@code romanCanEat} is false), resulting in no change to health or hunger.
+     */
     @Test
     void romanShouldNotEatFoodForbiddenForRomans() {
         TestRoman roman = new TestRoman("Brutus", 30, 1.8, 15, 10, Gender.MALE);
@@ -71,6 +88,11 @@ class RomanTest {
         assertEquals(initialHunger, roman.getHunger(), 0.0001);
     }
 
+    /**
+     * Tests the successful consumption of an allowed food (e.g., ROCK_OIL,
+     * where {@code romanCanEat} is true), verifying that health and hunger
+     * are updated according to the food's score.
+     */
     @Test
     void romanShouldEatAllowedFoodAndUpdateHealthAndHunger() {
         TestRoman roman = new TestRoman("Cassius", 30, 1.8, 15, 10, Gender.MALE);
@@ -88,6 +110,10 @@ class RomanTest {
         assertTrue(roman.getHunger() < initialHunger);
     }
 
+    /**
+     * Tests that {@code drinkPotion()} successfully increases the
+     * Roman's potion level when a positive dose is supplied.
+     */
     @Test
     void romanDrinkPotionShouldIncreasePotionLevelForPositiveDose() {
         TestRoman roman = new TestRoman("Julius", 35, 1.8, 18, 12, Gender.MALE);
@@ -97,6 +123,10 @@ class RomanTest {
         assertEquals(3.0, roman.getPotionLevel(), 0.0001);
     }
 
+    /**
+     * Tests that {@code drinkPotion()} ignores non-positive doses (zero or negative),
+     * resulting in no change to the Roman's potion level.
+     */
     @Test
     void romanDrinkPotionShouldIgnoreNonPositiveDose() {
         TestRoman roman = new TestRoman("Minus", 35, 1.8, 18, 12, Gender.MALE);
@@ -105,6 +135,11 @@ class RomanTest {
         assertEquals(0.0, roman.getPotionLevel(), 0.0001);
     }
 
+    /**
+     * Tests that the custom {@code toString()} method for the Roman
+     * includes all expected character attributes and labels (Name, Age,
+     * Gender, Height, Health, Hunger, Strength, Stamina, Potion Level).
+     */
     @Test
     void romanToStringShouldContainAllDetails() {
         String name = "Visus";
@@ -122,16 +157,14 @@ class RomanTest {
         assertTrue(s.contains("Age:"), "Must contain the label 'Age:'.");
         assertTrue(s.contains(Gender.MALE.toString()), "Must contain the gender.");
 
-        // 2. Verification of Height (Uses system locale for formatting)
-        String expectedHeight = String.format("%.2fm", height);
+        // 2. Verification of numeric values (using Locale.ROOT format for robustness)
+        String expectedHeight = String.format(Locale.ROOT, "%.2fm", height);
         assertTrue(s.contains(expectedHeight), "Must contain the formatted height ('1.80m').");
 
-        // 3. Verification of Strength (Uses system locale for formatting)
-        String expectedStrengthValue = String.format("%.1f", strength);
+        String expectedStrengthValue = String.format(Locale.ROOT, "%.1f", strength);
         assertTrue(s.contains("Str: " + expectedStrengthValue), "Must contain the strength (18.0).");
 
-        // 4. Verification of Stamina (Uses system locale for formatting)
-        String expectedStaminaValue = String.format("%.1f", stamina);
+        String expectedStaminaValue = String.format(Locale.ROOT, "%.1f", stamina);
         assertTrue(s.contains("Sta: " + expectedStaminaValue), "Must contain the stamina (12.0).");
 
         // 5. Verification of remaining labels

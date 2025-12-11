@@ -14,9 +14,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for {@link Battlefield} and basic {@link Place} behaviour.
+ * <p>
+ * This test suite ensures the correct initialization, character management,
+ * and food list exposure of the {@code Battlefield} class, which also
+ * inherits fundamental behavior from {@code Place}.
  */
 class BattlefieldTest {
 
+    /**
+     * Tests that a new {@code Battlefield} instance is correctly initialized
+     * with the specified name and size, and that its character and food
+     * collections are present but empty.
+     */
     @Test
     void battlefieldShouldInitializeWithNameAndEmptyCollections() {
         Battlefield battlefield = new Battlefield("Field", 100.0);
@@ -27,12 +36,21 @@ class BattlefieldTest {
         assertTrue(battlefield.getFoods().isEmpty());
     }
 
+    /**
+     * Verifies that attempting to add a {@code null} character to the
+     * battlefield correctly throws an {@code IllegalArgumentException}.
+     */
     @Test
     void addCharacterShouldRejectNull() {
         Battlefield battlefield = new Battlefield("Field", 100.0);
         assertThrows(IllegalArgumentException.class, () -> battlefield.addCharacter(null));
     }
 
+    /**
+     * Checks if the {@code addCharacter} method successfully accepts and stores
+     * various types of characters, including {@code BlackSmith}, {@code Legionnaire},
+     * and {@code Lycanthrope}.
+     */
     @Test
     void addCharacterShouldAcceptAnyCharacterType() {
         Battlefield battlefield = new Battlefield("Field", 100.0);
@@ -52,6 +70,10 @@ class BattlefieldTest {
         assertTrue(chars.contains(creature));
     }
 
+    /**
+     * Ensures that the {@code removeCharacter} method correctly deletes a
+     * character instance from the battlefield's internal list.
+     */
     @Test
     void removeCharacterShouldRemoveFromPlace() {
         Battlefield battlefield = new Battlefield("Field", 100.0);
@@ -64,6 +86,11 @@ class BattlefieldTest {
         assertTrue(battlefield.getCharacters().isEmpty());
     }
 
+    /**
+     * Tests that the {@code getCharacters} method returns a defensive copy
+     * of the character list. Modifying the returned list should not affect
+     * the battlefield's internal state.
+     */
     @Test
     void getCharactersShouldReturnDefensiveCopy() {
         Battlefield battlefield = new Battlefield("Field", 100.0);
@@ -78,6 +105,11 @@ class BattlefieldTest {
         assertEquals(1, battlefield.getCharacters().size());
     }
 
+    /**
+     * Tests that the {@code getFoods} method exposes a direct reference
+     * to the internal food list. Modifying the list returned by {@code getFoods}
+     * should directly modify the battlefield's internal food state.
+     */
     @Test
     void getFoodsShouldExposeInternalList() {
         Battlefield battlefield = new Battlefield("Field", 100.0);
@@ -94,6 +126,10 @@ class BattlefieldTest {
         assertSame(foodsRef, battlefield.getFoods());
     }
 
+    /**
+     * Verifies that the {@code toString} method output includes the
+     * battlefield's name and a reference to its population status.
+     */
     @Test
     void toStringShouldContainNameAndPopulation() {
         Battlefield battlefield = new Battlefield("Field", 100.0);

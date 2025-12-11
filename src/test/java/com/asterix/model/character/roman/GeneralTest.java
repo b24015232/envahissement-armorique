@@ -9,8 +9,18 @@ import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the {@link General} class, verifying its instantiation,
+ * inheritance, behavior (fight, command, attack), and the correctness
+ * of its detailed string representation.
+ */
 class GeneralTest {
 
+    /**
+     * Test-specific concrete subclass extending {@link General} to allow
+     * instantiation and provide a custom {@code toString()} method for
+     * verification tests.
+     */
     private static class TestGeneral extends General {
 
         TestGeneral(int id,
@@ -23,6 +33,13 @@ class GeneralTest {
             super(id, name, age, height, strength, stamina, gender);
         }
 
+        /**
+         * Provides a formatted string containing all character details.
+         * Note: The formatting logic here is specifically for testing purposes
+         * and ensures high coverage of the base class properties.
+         *
+         * @return A detailed string representation of the General.
+         */
         @Override
         public String toString() {
             return String.format(
@@ -40,6 +57,11 @@ class GeneralTest {
         }
     }
 
+    /**
+     * Tests that the custom {@code toString()} method for the General
+     * includes all expected attributes (Name, Age, Gender, Height, Health,
+     * Hunger, Strength, Stamina, Potion Level).
+     */
     @Test
     void generalToStringShouldContainAllDetails() {
         int id = 1;
@@ -60,13 +82,13 @@ class GeneralTest {
         assertTrue(s.contains("Age:"), "Must contain the label 'Age:'.");
         assertTrue(s.contains(gender.toString()), "Must contain the gender.");
 
-        String expectedHeight = String.format("%.2fm", height);
-        assertTrue(s.contains(expectedHeight), "Must contain the formatted height ('1,85m' if French Locale is used).");
+        String expectedHeight = String.format(Locale.ROOT, "%.2fm", height);
+        assertTrue(s.contains(expectedHeight), "Must contain the formatted height ('1.85m').");
 
-        String expectedStrengthValue = String.format("%.1f", strength);
+        String expectedStrengthValue = String.format(Locale.ROOT, "%.1f", strength);
         assertTrue(s.contains("Str: " + expectedStrengthValue), "Must contain the strength (25.0).");
 
-        String expectedStaminaValue = String.format("%.1f", stamina);
+        String expectedStaminaValue = String.format(Locale.ROOT, "%.1f", stamina);
         assertTrue(s.contains("Sta: " + expectedStaminaValue), "Must contain the stamina (15.0).");
 
         assertTrue(s.contains("HP:"), "Must contain the 'HP:' label.");
@@ -74,6 +96,10 @@ class GeneralTest {
         assertTrue(s.contains("Potion:"), "Must contain the 'Potion:' label.");
     }
 
+    /**
+     * Verifies that {@code General} correctly inherits from {@code Soldier}
+     * and implements the required ability interfaces: {@link Fighter} and {@link Leader}.
+     */
     @Test
     void generalShouldBeSoldierFighterAndLeader() {
         TestGeneral general = new TestGeneral(1, "Caius", 40, 1.85, 25, 15, Gender.MALE);
@@ -83,6 +109,9 @@ class GeneralTest {
         assertInstanceOf(Leader.class, general);
     }
 
+    /**
+     * Tests that the {@code getId()} method returns the ID passed during construction.
+     */
     @Test
     void generalShouldExposeId() {
         TestGeneral general = new TestGeneral(42, "Caius", 40, 1.85, 25, 15, Gender.MALE);
@@ -90,6 +119,11 @@ class GeneralTest {
         assertEquals(42, general.getId());
     }
 
+    /**
+     * Tests the {@code fight()} method, ensuring that attacking another
+     * character (e.g., a {@code Legionnaire}) successfully reduces the
+     * opponent's health.
+     */
     @Test
     void generalFightShouldReduceOpponentHealth() {
         TestGeneral general = new TestGeneral(1, "Caius", 40, 1.85, 25, 15, Gender.MALE);
@@ -102,6 +136,10 @@ class GeneralTest {
         assertTrue(legionnaire.getHealth() < initialHealth);
     }
 
+    /**
+     * Tests that calling {@code fight()} with a {@code null} opponent
+     * is safely handled and does not affect the General's own health.
+     */
     @Test
     void generalFightWithNullOpponentShouldNotChangeHealth() {
         TestGeneral general = new TestGeneral(1, "Caius", 40, 1.85, 25, 15, Gender.MALE);
@@ -113,6 +151,11 @@ class GeneralTest {
         assertEquals(initialHealth, general.getHealth(), 0.0001);
     }
 
+    /**
+     * Tests the {@code command()} method (from the {@code Leader} interface),
+     * ensuring its execution does not have the side effect of changing
+     * the General's health.
+     */
     @Test
     void generalLeadShouldExecuteWithoutChangingHealth() {
         TestGeneral general = new TestGeneral(1, "Caius", 40, 1.85, 25, 15, Gender.MALE);
@@ -124,6 +167,10 @@ class GeneralTest {
         assertEquals(initialHealth, general.getHealth(), 0.0001);
     }
 
+    /**
+     * Tests the {@code attack()} method, ensuring its execution does not
+     * have the side effect of changing the General's health.
+     */
     @Test
     void generalAttackShouldExecuteWithoutChangingHealth() {
         TestGeneral general = new TestGeneral(1, "Caius", 40, 1.85, 25, 15, Gender.MALE);

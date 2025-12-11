@@ -20,7 +20,6 @@ public class GaulTest {
         double stamina = 100.0;
         Gender gender = Gender.MALE;
 
-        // fix : implement abstract method getHealth() in the anonymous class
         Gaul casalix = new Gaul(name, age, height, strength, stamina, gender) {
             @Override
             public double getHealth() {
@@ -35,7 +34,6 @@ public class GaulTest {
 
     @Test
     public void testDrinkPotion() {
-        // fix: implement abstract method getHealth()
         Gaul balerdix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE) {
             @Override
             public double getHealth() {
@@ -54,7 +52,6 @@ public class GaulTest {
 
     @Test
     public void testEat() {
-        // FIX: Implement abstract method getHealth()
         Gaul ricardix = new Gaul("Ricardix", 51, 2.10, 1000.0, 500.0, Gender.MALE) {
             {
                 this.health = 50.0;
