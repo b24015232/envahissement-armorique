@@ -149,16 +149,13 @@ public class XmlScenarioLoader {
         // Factory de personnages
         if (type == null) return null;
 
-        /* NOTE IMPORTANTE :
-           Comme 'type' est converti en lowerCase, les 'case' doivent être en minuscules.
-        */
         return switch (type.toLowerCase()) {
             case "merchant" -> new Merchant(name, age, height, strength, stamina, gender);
             case "legionnaire", "legionnary" -> new Legionnaire(name, age, height, strength, stamina, gender); // Gestion faute de frappe XML
 
             default -> {
                 System.err.println("Type de personnage inconnu : " + type);
-                yield null; // 'yield' est nécessaire pour retourner null dans un block switch expression
+                yield null;
             }
         };
     }
