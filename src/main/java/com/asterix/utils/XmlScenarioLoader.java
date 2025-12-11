@@ -2,10 +2,8 @@ package com.asterix.utils;
 
 import com.asterix.model.character.Chief;
 import com.asterix.model.character.Gender;
-import com.asterix.model.character.gaul.Gaul;
-import com.asterix.model.character.gaul.Merchant;
-import com.asterix.model.character.roman.Legionnaire;
-import com.asterix.model.character.roman.Roman;
+import com.asterix.model.character.gaul.*;
+import com.asterix.model.character.roman.*;
 import com.asterix.model.simulation.InvasionTheater;
 import com.asterix.model.place.*;
 import com.asterix.model.character.Character; // Import explicite pour éviter la confusion avec java.lang.Character
@@ -51,7 +49,6 @@ public class XmlScenarioLoader {
             String type = placeElement.getAttribute("type");
             String name = getTagValue("name", placeElement);
             double area = Double.parseDouble(getTagValue("area", placeElement));
-
             Place place = null;
 
             if ("Battlefield".equalsIgnoreCase(type)) {
@@ -67,8 +64,12 @@ public class XmlScenarioLoader {
 
                     Chief chief = new Chief(cName, cSex, cAge, null);
 
-                    if ("RomanCamp".equalsIgnoreCase(type) || "Camp".equalsIgnoreCase(type)) {
+                    if (type.equalsIgnoreCase("RomanCamp")) {
                         place = new RomanCamp(name, area, chief);
+                    } else if (type.equalsIgnoreCase("RomanCity") || type.equalsIgnoreCase("RomanVillage")) {
+                        place = new RomanCity(name, area, chief);
+                    } else if (type.equalsIgnoreCase("GalloRomanTown")) {
+                        place = new GalloRomanTown(name, area, chief);
                     } else {
                         place = new GaulVillage(name, area, chief);
                     }
@@ -92,7 +93,6 @@ public class XmlScenarioLoader {
         return theater;
     }
 
-    // --- Méthodes Utilitaires ---
 
     private static String getTagValue(String tag, Element element) {
         NodeList nodeList = element.getElementsByTagName(tag);
@@ -105,15 +105,32 @@ public class XmlScenarioLoader {
         return "0"; // Retourne "0" par défaut pour éviter de faire planter parseInt/parseDouble
     }
 
+    /**
+     * Factory method instantiating the correct Place subclass based on the type string.
+     * Handles all place types defined in the specifications.
+     *
+     * @param type  The type string from XML or UI (e.g., "Gaul Village", "Battlefield").
+     * @param name  The name of the place.
+     * @param area  The surface area.
+     * @param chief The chief to assign (can be null for Battlefields/Enclosures).
+     * @return The concrete Place instance.
+     */
     private static Place createPlace(String type, String name, double area, Chief chief) {
         if (type == null) return new Battlefield(name, area);
 
-        return switch (type.toLowerCase()) {
+        String normalizedType = type.toLowerCase().replace(" ", "").replace("-", "");
+
+        return switch (normalizedType) {
+
             case "battlefield" -> new Battlefield(name, area);
+            case "creatureenclosure", "enclos" -> new CreatureEnclosure(name, area);
             case "gaulvillage" -> new GaulVillage(name, area, chief);
             case "romancamp" -> new RomanCamp(name, area, chief);
+            case "romancity", "romanvillage" -> new RomanCity(name, area, chief);
+            case "galloromantown", "bourgade" -> new GalloRomanTown(name, area, chief);
+
             default -> {
-                System.out.println("Lieu inconnu : " + type + ", création Battlefield par défaut.");
+                System.out.println("⚠️ Lieu inconnu : " + type + ", création d'un Battlefield par défaut.");
                 yield new Battlefield(name, area);
             }
         };
@@ -123,7 +140,7 @@ public class XmlScenarioLoader {
         // Parsing des attributs
         String type = element.getAttribute("type");
         String name = getTagValue("name", element);
-
+        int id =  Integer.parseInt(getTagValue("id", element));
         int age = 0;
         double height = 0.0, strength = 0.0, stamina = 0.0;
 
@@ -150,9 +167,18 @@ public class XmlScenarioLoader {
         if (type == null) return null;
 
         return switch (type.toLowerCase()) {
+            // --- GAULOIS ---
             case "merchant" -> new Merchant(name, age, height, strength, stamina, gender);
-            case "legionnaire", "legionnary" -> new Legionnaire(name, age, height, strength, stamina, gender); // Gestion faute de frappe XML
+            case "druid" -> new Druid(name, age, height, strength, stamina, gender);
+            case "blacksmith" -> new BlackSmith(name, age, height, strength, stamina, gender);
+            case "innkeeper" -> new Innkeeper(name, age, height, strength, stamina, gender);
 
+            // --- ROMAINS ---
+            case "legionnaire", "legionnary" -> new Legionnaire(name, age, height, strength, stamina, gender);
+            case "general" -> new General(id, name, age, height, strength, stamina, gender);
+            case "prefect" -> new Prefect(name, age, height, strength, stamina, gender);
+
+            // --- DÉFAUT ---
             default -> {
                 System.err.println("Type de personnage inconnu : " + type);
                 yield null;
