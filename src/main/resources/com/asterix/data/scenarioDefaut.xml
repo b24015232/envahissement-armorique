@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InvasionTheater>
+    <name>La Grande Invasion - Armorique 50 av. J.C.</name>
+    <places>
+
+        <place type="GaulVillage">
+            <name>Village des Irréductibles</name>
+            <area>850</area>
+
+            <chief>
+                <name>Abraracourcix</name>
+                <age>55</age>
+                <sex>MALE</sex>
+            </chief>
+
+            <characters>
+                <character type="Blacksmith">
+                    <name>Obélix</name>
+                    <age>35</age>
+                    <height>1.95</height>
+                    <strength>120.0</strength>
+                    <stamina>80.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Merchant">
+                    <name>Astérix</name>
+                    <age>35</age>
+                    <height>1.60</height>
+                    <strength>40.0</strength>
+                    <stamina>90.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Druid">
+                    <name>Panoramix</name>
+                    <age>85</age>
+                    <height>1.80</height>
+                    <strength>5.0</strength>
+                    <stamina>30.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Blacksmith">
+                    <name>Cétautomatix</name>
+                    <age>40</age>
+                    <height>1.85</height>
+                    <strength>60.0</strength>
+                    <stamina>40.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Merchant">
+                    <name>Ordralfabétix</name>
+                    <age>45</age>
+                    <height>1.70</height>
+                    <strength>25.0</strength>
+                    <stamina>20.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Innkeeper">
+                    <name>Bonemine</name>
+                    <age>45</age>
+                    <height>1.60</height>
+                    <strength>35.0</strength>
+                    <stamina>40.0</stamina>
+                    <gender>FEMALE</gender>
+                </character>
+            </characters>
+        </place>
+
+        <place type="RomanCamp">
+            <name>Camp de Babaorum</name>
+            <area>1200</area>
+
+            <chief>
+                <name>Centurion Gazpachoandalus</name>
+                <age>48</age>
+                <sex>MALE</sex>
+            </chief>
+
+            <characters>
+                <character type="General">
+                    <name>General Caius Bonus</name>
+                    <age>50</age>
+                    <height>1.75</height>
+                    <strength>45.0</strength>
+                    <stamina>30.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Legionnaire">
+                    <name>Legionnaire Minus</name>
+                    <age>22</age>
+                    <height>1.65</height>
+                    <strength>12.0</strength>
+                    <stamina>10.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Legionnaire">
+                    <name>Legionnaire Milexcus</name>
+                    <age>24</age>
+                    <height>1.78</height>
+                    <strength>15.0</strength>
+                    <stamina>15.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+
+                <character type="Soldier">
+                    <name>Auxiliaire Numide</name>
+                    <age>30</age>
+                    <height>1.80</height>
+                    <strength>20.0</strength>
+                    <stamina>25.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+            </characters>
+        </place>
+
+        <place type="RomanCity">
+            <name>Condate (Rennes)</name>
+            <area>5000</area>
+
+            <chief>
+                <name>Gouverneur Garovirus</name>
+                <age>60</age>
+                <sex>MALE</sex>
+            </chief>
+
+            <characters>
+                <character type="Prefect">
+                    <name>Préfet Olibrius</name>
+                    <age>35</age>
+                    <height>1.70</height>
+                    <strength>10.0</strength>
+                    <stamina>10.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+            </characters>
+        </place>
+
+        <place type="GalloRomanTown">
+            <name>Sérum (Bourgade)</name>
+            <area>800</area>
+
+            <chief>
+                <name>Aplusbegalix</name>
+                <age>50</age>
+                <sex>MALE</sex>
+            </chief>
+
+            <characters>
+                <character type="Innkeeper">
+                    <name>Aubergiste Mixte</name>
+                    <age>33</age>
+                    <height>1.75</height>
+                    <strength>15.0</strength>
+                    <stamina>20.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+            </characters>
+        </place>
+
+        <place type="CreatureEnclosure">
+            <name>Forêt des Carnutes</name>
+            <area>3000</area>
+            <characters>
+                <character type="Lycanthrope">
+                    <name>Le Grand Loup</name>
+                    <age>100</age>
+                    <height>2.10</height>
+                    <strength>80.0</strength>
+                    <stamina>80.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+                <character type="Lycanthrope">
+                    <name>Jeune Loup</name>
+                    <age>12</age>
+                    <height>1.50</height>
+                    <strength>40.0</strength>
+                    <stamina>40.0</stamina>
+                    <gender>FEMALE</gender>
+                </character>
+            </characters>
+        </place>
+
+        <place type="Battlefield">
+            <name>Plaine de Gergovie</name>
+            <area>10000</area>
+            <characters>
+                <character type="Soldier">
+                    <name>Déserteur Romain</name>
+                    <age>20</age>
+                    <height>1.70</height>
+                    <strength>10.0</strength>
+                    <stamina>5.0</stamina>
+                    <gender>MALE</gender>
+                </character>
+            </characters>
+        </place>
+
+    </places>
+</InvasionTheater>

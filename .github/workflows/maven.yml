@@ -1,0 +1,37 @@
+name: Java CI with Maven
+
+on:
+  # Déclenche les tests quand tu pousses du code
+  push:
+    branches:
+      - main        # Version finale
+      - dev         # Version d'intégration
+      - 'feat/**'   # Tes fonctionnalités en cours (ex: feat/gaulois)
+
+  # Déclenche aussi lors des demandes de fusion (Pull Requests)
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupère ton code
+      - uses: actions/checkout@v4
+
+      # 2. Installe Java 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # 3. Compile, Teste ET Génère la Documentation (Javadoc)
+      - name: Build and Test with Maven
+        run: mvn -B verify javadoc:javadoc jacoco:report
+
+      # 4. Vérifie que le rapport de qualité est généré
+      - name: Check JaCoCo Report existence
+        run: test -f target/site/jacoco/index.html && echo "JaCoCo report generated!"

@@ -1,0 +1,23 @@
+package com.asterix.model.place;
+
+import com.asterix.model.character.Character;
+import com.asterix.model.character.creature.Creature;
+
+/**
+ * Represents an enclosure for special creatures.
+ * <p>
+ * Access is strictly restricted to Fantastic Creatures (e.g., Lycanthropes).
+ * </p>
+ *
+ */
+public final class CreatureEnclosure extends Place {
+
+    public CreatureEnclosure(String name, double area) {
+        super(name, area);
+    }
+
+    @Override
+    public boolean canEnter(Character c) {
+        return c instanceof Creature;
+    }
+}

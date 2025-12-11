@@ -1,0 +1,14 @@
+# Fichiers compilés Maven
+target/
+*.class
+
+# Fichiers de configuration IDE
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+.vscode/
+
+# Fichiers système
+.DS_Store
