@@ -1,6 +1,7 @@
 package com.asterix.model.place;
 
 import com.asterix.model.character.Character;
+import com.asterix.model.character.Chief;
 import com.asterix.model.item.Food;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
  * @see com.asterix.model.character.Character
  * Reference:
  */
-public abstract sealed class Place permits Battlefield, Settlement {
+public abstract sealed class Place permits Battlefield, Settlement, CreatureEnclosure {
 
     protected String name;
     protected double area;
@@ -121,46 +122,46 @@ public abstract sealed class Place permits Battlefield, Settlement {
     }
 
     /**
-     * Gets the name of the place.
+     * Retrieves the name.
      *
-     * @return The name string.
+     * @return the name as a String.
      */
     public String getName() {
         return name;
     }
 
-    public StringBuilder displayCharacteristics() {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("========================================\n");
-        sb.append("📍 Location Info: ").append(this.name).append("\n");
-        sb.append("   📏 Area: ").append(this.area).append(" m²\n");
-        sb.append("   👥 Population: ").append(this.characters.size()).append("\n");
-
-        sb.append("\n--- Occupants ---\n");
-        if (characters.isEmpty()) {
-            sb.append("   (None)\n");
-        } else {
-            for (Character c : characters) {
-                // Assuming Character.toString() displays its characteristics (Name, Health, etc.)
-                sb.append("   👤 ").append(c.toString()).append("\n");
-            }
-        }
-
-        sb.append("\n--- Food Inventory ---\n");
-        if (foods.isEmpty()) {
-            sb.append("   (Empty)\n");
-        } else {
-            for (Food f : foods) {
-                // Uses getName() which includes the state (Fresh/Stale) thanks to our State Pattern
-                sb.append("   🍎 ").append(f.getName()).append(" (Type: ").append(f.getType()).append(")\n");
-            }
-        }
-        sb.append("========================================\n");
-
-        System.out.println(sb.toString());
-        return sb;
+    /**
+     * Sets the name.
+     *
+     * @param name the new name to set.
+     */
+    public void setName(String name) {
+        this.name = name;
     }
+
+    /**
+     * Retrieves the area value.
+     *
+     * @return the area as a double.
+     */
+    public double getArea() {
+        return this.area;
+    }
+
+    /**
+     * Sets the area value.
+     *
+     * @param area the area to set.
+     */
+    public void setArea(double area) {
+        this.area = area;
+    }
+
+    /**
+     * Retrieves the Chief associated with this object.
+     *
+     * @return the current Chief.
+     */
 
     @Override
     public String toString() {

@@ -49,4 +49,8 @@ public class Legionnaire extends Soldier {
         System.out.println(name + " (Legionnaire) attacks " + opponent.getName() + " in close combat!");
         resolveFight(opponent);
     }
+
+    public String toString() {
+        return "Legionnaire " + super.toString();
+    }
 }

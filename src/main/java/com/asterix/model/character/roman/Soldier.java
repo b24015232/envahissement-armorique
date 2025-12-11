@@ -33,11 +33,6 @@ public abstract class Soldier extends Roman implements Fighter {
 
     @Override
     public String toString() {
-        return getClass().getSimpleName()
-                + " [Name=" + name
-                + ", Health=" + health
-                + ", Strength=" + strength
-                + ", Stamina=" + stamina
-                + "]";
+        return "Soldier " + super.toString();
     }
 }
