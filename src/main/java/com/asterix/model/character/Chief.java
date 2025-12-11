@@ -148,6 +148,15 @@ public class Chief {
 
     // --- Getters & Setters ---
     public String getName() { return name; }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
     public Place getLocation() { return place; }
     public void setLocation(Place location) { this.place = location; }
 }
