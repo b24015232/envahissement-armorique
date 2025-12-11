@@ -39,6 +39,14 @@ class CharacterTest {
         public String toString() {
             return "TestFighterCharacter{name='" + name + "'}";
         }
+
+        /**
+         * @return
+         */
+        @Override
+        public double getHealth() {
+            return 0;
+        }
     }
 
     @Test

@@ -26,6 +26,14 @@ class RomanTest {
             super(name, age, height, strength, stamina, gender);
         }
 
+        /**
+         * @return
+         */
+        @Override
+        public double getHealth() {
+            return 0;
+        }
+
     }
 
     @Test

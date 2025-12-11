@@ -20,6 +20,14 @@ class SoldierTest {
             super(name, age, height, strength, stamina, gender);
         }
 
+        /**
+         * @return
+         */
+        @Override
+        public double getHealth() {
+            return 0;
+        }
+
         @Override
         public void fight(Character opponent) {
             resolveFight(opponent);

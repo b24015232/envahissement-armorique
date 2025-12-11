@@ -20,19 +20,21 @@ public class DruidTest {
     /**
      * Verifies the specific abilities of the Druid, particularly potion concoction
      * and polymorphism across multiple interfaces.
-     * Uses a custom character "Nevotix" to represent the academic druid.
      */
     @Test
     public void testDruidCapabilities() {
-        // Arrange : creating Nevotix
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE);
+        // Arrange : creating Nevotix with anonymous class to handle abstract methods
+        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
+            @Override
+            public double getHealth() {
+                return this.health;
+            }
+        };
 
         // Act & assert 1: Specific method
-        // This validates that the brewing process (using Cauldron) runs without error
         assertDoesNotThrow(() -> nevotix.concoctPotion(), "Nevotix should be able to concoct potion");
 
         // Act & assert 2: polymorphism checks
-        // This confirms the druid is a "Swiss army knife"
         assertTrue(nevotix instanceof Worker, "Druid must be a worker");
         assertTrue(nevotix instanceof Fighter, "Druid must be a fighter");
         assertTrue(nevotix instanceof Leader, "Druid must be a leader");
@@ -46,7 +48,13 @@ public class DruidTest {
      */
     @Test
     public void testDruidActions() {
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE);
+        // Fix: Implement abstract method getHealth()
+        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
+            @Override
+            public double getHealth() {
+                return this.health;
+            }
+        };
 
         // checking that methods execute without error
         assertDoesNotThrow(() -> nevotix.work());
@@ -58,19 +66,20 @@ public class DruidTest {
 
     /**
      * Verifies that the Druid can successfully serve potion to another Gaul.
-     * <p>
-     * Scenario:
-     * 1. Nevotix brews the potion (concoctPotion).
-     * 2. Nevotix serves Asterix.
-     * 3. Asterix's potion level increases by exactly 1.0.
-     * </p>
      */
     @Test
     public void testServePotionSuccess() {
         // Arrange
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE);
-        // We use a Merchant as a generic Gaul for testing the receiver
-        Gaul asterix = new Merchant("Asterix", 35, 1.60, 15.0, 20.0, Gender.MALE);
+        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
+            @Override
+            public double getHealth() { return this.health; }
+        };
+
+        // We use an anonymous Gaul instead of Merchant
+        Gaul asterix = new Gaul("Asterix", 35, 1.60, 15.0, 20.0, Gender.MALE) {
+            @Override
+            public double getHealth() { return this.health; }
+        };
 
         double initialPotionLevel = asterix.getPotionLevel();
 
@@ -89,16 +98,23 @@ public class DruidTest {
     @Test
     public void testServePotionWithoutBrewing() {
         // Arrange
-        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE);
-        Gaul obelix = new Merchant("Obelix", 35, 1.90, 100.0, 50.0, Gender.MALE);
+        Druid nevotix = new Druid("Nevotix", 45, 1.70, 5.0, 10.0, Gender.MALE) {
+            @Override
+            public double getHealth() { return this.health; }
+        };
 
-        double initialPotionLevel = obelix.getPotionLevel();
+        Gaul clarix = new Gaul("Clarix", 35, 1.90, 100.0, 50.0, Gender.FEMALE) {
+            @Override
+            public double getHealth() { return this.health; }
+        };
+
+        double initialPotionLevel = clarix.getPotionLevel();
 
         // Act: Try to serve WITHOUT calling concoctPotion() first
-        nevotix.servePotion(obelix);
+        nevotix.servePotion(clarix);
 
         // Assert
-        assertEquals(initialPotionLevel, obelix.getPotionLevel(), 0.0001,
+        assertEquals(initialPotionLevel, clarix.getPotionLevel(), 0.0001,
                 "Potion level should not change if the cauldron is empty or not created");
     }
 }

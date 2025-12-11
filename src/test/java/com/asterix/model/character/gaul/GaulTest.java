@@ -20,7 +20,13 @@ public class GaulTest {
         double stamina = 100.0;
         Gender gender = Gender.MALE;
 
-        Gaul casalix = new Gaul(name, age, height, strength, stamina, gender) {};
+        // fix : implement abstract method getHealth() in the anonymous class
+        Gaul casalix = new Gaul(name, age, height, strength, stamina, gender) {
+            @Override
+            public double getHealth() {
+                return this.health;
+            }
+        };
 
         assertEquals("Casalix", casalix.getName());
         assertEquals(100.0, casalix.getHealth());
@@ -29,9 +35,16 @@ public class GaulTest {
 
     @Test
     public void testDrinkPotion() {
-        Gaul balerdix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE) {};
+        // fix: implement abstract method getHealth()
+        Gaul balerdix = new Gaul("Balerdix", 26, 1.87, 150.0, 200.0, Gender.MALE) {
+            @Override
+            public double getHealth() {
+                return this.health;
+            }
+        };
         double initialPotion = balerdix.getPotionLevel();
 
+        // Testing drinkPotion
         balerdix.drinkPotion(10.0);
         assertEquals(initialPotion + 10.0, balerdix.getPotionLevel());
 
@@ -41,8 +54,16 @@ public class GaulTest {
 
     @Test
     public void testEat() {
+        // FIX: Implement abstract method getHealth()
         Gaul ricardix = new Gaul("Ricardix", 51, 2.10, 1000.0, 500.0, Gender.MALE) {
-            { this.health = 50.0; }
+            {
+                this.health = 50.0;
+            } // Initialization block to set lower health
+
+            @Override
+            public double getHealth() {
+                return this.health;
+            }
         };
 
         // 1. Eat null
@@ -50,15 +71,14 @@ public class GaulTest {
         assertEquals(50.0, ricardix.getHealth());
 
         // 2. Eat allowed food (Wildboar)
-        // PerishableFood uses FreshState score (10), not Enum score (15).
-        // Health: 50 + 10 = 60.
         Food boar = FoodType.WILDBOAR.create();
         ricardix.eat(boar);
-        assertEquals(60.0, ricardix.getHealth(), "Eating fresh wildboar should restore 10 health points");
 
-        // 3. Eat forbidden food
+        assertEquals(60.0, ricardix.getHealth(), "Eating fresh wildboar should restore health");
+
+        // 3. Eat forbidden food (Rock Oil)
         Food forbiddenFood = FoodType.ROCK_OIL.create();
         ricardix.eat(forbiddenFood);
-        assertEquals(60.0, ricardix.getHealth());
+        assertEquals(60.0, ricardix.getHealth(), "Gauls should not gain health from Rock Oil");
     }
 }
