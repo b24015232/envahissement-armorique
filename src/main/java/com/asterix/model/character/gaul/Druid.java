@@ -11,7 +11,7 @@ import com.asterix.model.item.FoodType;
 import com.asterix.model.item.PerishableFood;
 import java.util.Random;
 
-public abstract class Druid extends Gaul implements Worker, Fighter, Leader {
+public class Druid extends Gaul implements Worker, Fighter, Leader {
 
     private Cauldron currentCauldron;
     private final Random random;
@@ -92,7 +92,6 @@ public abstract class Druid extends Gaul implements Worker, Fighter, Leader {
             gaul.drinkPotionFromCauldron(currentCauldron);
         }
     }
-
     public Cauldron getCauldron() {
         return this.currentCauldron;
     }

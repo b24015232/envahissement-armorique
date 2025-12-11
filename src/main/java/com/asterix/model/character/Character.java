@@ -131,6 +131,15 @@ public abstract class Character {
         this.belligerence = b;
     }
 
+    /**
+     * Gets the current health points of the character.
+     *
+     * @return The health value.
+     */
+    public double getHealth() {
+        return health;
+    }
+
     public void passTime() {
         if (!isAlive()) return;
         this.hunger += 2.0;
@@ -159,6 +168,4 @@ public abstract class Character {
     public String toString() {
         return name + (isStatue ? " [STATUE]" : "") + (isLycanthrope ? " [WOLF]" : "");
     }
-
-    public abstract double getHealth();
 }

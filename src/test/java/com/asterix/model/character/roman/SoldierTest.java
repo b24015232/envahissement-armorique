@@ -1,9 +1,12 @@
 package com.asterix.model.character.roman;
 
 import com.asterix.model.ability.Fighter;
+import com.asterix.model.ability.Leader;
 import com.asterix.model.character.Character;
 import com.asterix.model.character.Gender;
 import org.junit.jupiter.api.Test;
+
+import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,17 +23,25 @@ class SoldierTest {
             super(name, age, height, strength, stamina, gender);
         }
 
-        /**
-         * @return
-         */
-        @Override
-        public double getHealth() {
-            return 0;
-        }
-
         @Override
         public void fight(Character opponent) {
             resolveFight(opponent);
+        }
+
+        @Override
+        public String toString() {
+            return String.format(
+                    "%-25s | %-6s | Age: %-3d | 📏 %.2fm | ❤️ HP: %-5.1f | 🍖 Hunger: %-5.1f | 💪 Str: %-5.1f | 🏃 Sta: %-5.1f | 🧪 Potion: %.1f",
+                    this.getClass().getSimpleName() + " (" + this.getName() + ")",
+                    this.getGender().toString(),
+                    this.getAge(),
+                    this.getHeight(),
+                    this.getHealth(),
+                    this.getHunger(),
+                    this.getStrength(),
+                    this.getStamina(),
+                    this.getPotionLevel()
+            );
         }
     }
 
@@ -53,11 +64,35 @@ class SoldierTest {
     }
 
     @Test
-    void soldierToStringShouldContainClassNameAndName() {
-        TestSoldier soldier = new TestSoldier("Marcus", 30, 1.8, 15, 10, Gender.MALE);
+    void soldierToStringShouldContainAllDetails() {
+        String name = "Marcus";
+        int age = 30;
+        double height = 1.80;
+        double strength = 15.0;
+        double stamina = 10.0;
+        Gender gender = Gender.MALE;
 
+        TestSoldier soldier = new TestSoldier(name, age, height, strength, stamina, gender);
         String s = soldier.toString();
-        assertTrue(s.contains("TestSoldier"));
-        assertTrue(s.contains("Marcus"));
+
+        assertTrue(s.contains("TestSoldier"), "Must contain the name of the dummy class.");
+        assertTrue(s.contains(name), "Must contain the name 'Marcus'.");
+
+        assertTrue(s.contains(String.valueOf(age)), "Must contain the age.");
+        assertTrue(s.contains("Age:"), "Must contain the label 'Age:'.");
+        assertTrue(s.contains(gender.toString()), "Must contain the gender.");
+
+        String expectedHeight = String.format("%.2fm", height);
+        assertTrue(s.contains(expectedHeight), "Must contain the formatted height ('1,80m' or '1.80m').");
+
+        String expectedStrength = String.format("%.1f", strength);
+        assertTrue(s.contains("Str: " + expectedStrength), "Must contain the strength (15.0).");
+
+        String expectedStamina = String.format("%.1f", stamina);
+        assertTrue(s.contains("Sta: " + expectedStamina), "Must contain the stamina (10.0).");
+
+        assertTrue(s.contains("HP:"));
+        assertTrue(s.contains("Hunger:"));
+        assertTrue(s.contains("Potion:"));
     }
 }

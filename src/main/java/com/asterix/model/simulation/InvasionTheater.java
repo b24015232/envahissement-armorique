@@ -158,18 +158,10 @@ public class InvasionTheater {
         if (original instanceof Gaul) {
             return new Gaul(original.getName() + " (Clone)", original.getAge(), original.getHeight(),
                     original.getStrength(), original.getStamina(), original.getGender()) {
-                @Override
-                public double getHealth() {
-                    return 0;
-                }
             };
         } else if (original instanceof Roman) {
             return new Roman(original.getName() + " (Clone)", original.getAge(), original.getHeight(),
                     original.getStrength(), original.getStamina(), original.getGender()) {
-                @Override
-                public double getHealth() {
-                    return 0;
-                }
             };
         }
         return null;

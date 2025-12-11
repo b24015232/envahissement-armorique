@@ -5,6 +5,8 @@ import com.asterix.model.item.Food;
 import com.asterix.model.item.FoodType;
 import org.junit.jupiter.api.Test;
 
+import java.util.Locale; // Added import for robust formatting check
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -26,14 +28,22 @@ class RomanTest {
             super(name, age, height, strength, stamina, gender);
         }
 
-        /**
-         * @return
-         */
         @Override
-        public double getHealth() {
-            return 0;
+        public String toString() {
+            // NOTE: This format uses system locale for decimals (e.g., comma in France)
+            return String.format(
+                    "%-15s | %-6s | Age: %-3d | 📏 %.2fm | ❤️ HP: %-5.1f | 🍖 Hunger: %-5.1f | 💪 Str: %-5.1f | 🏃 Sta: %-5.1f | 🧪 Potion: %.1f",
+                    this.getName(),
+                    this.getGender().toString(),
+                    this.getAge(),
+                    this.getHeight(),
+                    this.getHealth(),
+                    this.getHunger(),
+                    this.getStrength(),
+                    this.getStamina(),
+                    this.getPotionLevel()
+            );
         }
-
     }
 
     @Test
@@ -41,7 +51,7 @@ class RomanTest {
         TestRoman roman = new TestRoman("Nullius", 30, 1.8, 15, 10, Gender.MALE);
         double initialHealth = roman.getHealth();
         double initialHunger = roman.getHunger();
-        // branche: if (food == null) { return; }
+        // branch: if (food == null) { return; }
         roman.eat(null);
         assertEquals(initialHealth, roman.getHealth(), 0.0001);
         assertEquals(initialHunger, roman.getHunger(), 0.0001);
@@ -54,7 +64,7 @@ class RomanTest {
         double initialHunger = roman.getHunger();
         // WILDBOAR is configured with romanCanEat = false in FoodType
         Food boar = FoodType.WILDBOAR.create();
-        // branche: if (!food.canBeEatenByRoman()) { ... return; }
+        // branch: if (!food.canBeEatenByRoman()) { ... return; }
         roman.eat(boar);
         // Health and hunger should not change because Romans cannot eat wildboar
         assertEquals(initialHealth, roman.getHealth(), 0.0001);
@@ -70,7 +80,7 @@ class RomanTest {
         Food rockOil = FoodType.ROCK_OIL.create();
         double initialHealth = roman.getHealth();
         double initialHunger = roman.getHunger();
-        // branche "normale" de eat()
+        // normal eat() branch
         roman.eat(rockOil);
         // Health should have changed because score is negative
         assertTrue(roman.getHealth() < initialHealth);
@@ -96,10 +106,37 @@ class RomanTest {
     }
 
     @Test
-    void romanToStringShouldContainClassNameAndName() {
-        TestRoman roman = new TestRoman("Visus", 35, 1.8, 18, 12, Gender.MALE);
+    void romanToStringShouldContainAllDetails() {
+        String name = "Visus";
+        int age = 35;
+        double height = 1.8;
+        double strength = 18.0;
+        double stamina = 12.0;
+
+        TestRoman roman = new TestRoman(name, age, height, strength, stamina, Gender.MALE);
         String s = roman.toString();
-        assertTrue(s.contains("Roman"));
-        assertTrue(s.contains("Visus"));
+
+        // 1. Verification of fixed data
+        assertTrue(s.contains(name), "Must contain the name.");
+        assertTrue(s.contains(String.valueOf(age)), "Must contain the age.");
+        assertTrue(s.contains("Age:"), "Must contain the label 'Age:'.");
+        assertTrue(s.contains(Gender.MALE.toString()), "Must contain the gender.");
+
+        // 2. Verification of Height (Uses system locale for formatting)
+        String expectedHeight = String.format("%.2fm", height);
+        assertTrue(s.contains(expectedHeight), "Must contain the formatted height ('1.80m').");
+
+        // 3. Verification of Strength (Uses system locale for formatting)
+        String expectedStrengthValue = String.format("%.1f", strength);
+        assertTrue(s.contains("Str: " + expectedStrengthValue), "Must contain the strength (18.0).");
+
+        // 4. Verification of Stamina (Uses system locale for formatting)
+        String expectedStaminaValue = String.format("%.1f", stamina);
+        assertTrue(s.contains("Sta: " + expectedStaminaValue), "Must contain the stamina (12.0).");
+
+        // 5. Verification of remaining labels
+        assertTrue(s.contains("HP:"), "Must contain the 'HP:' label.");
+        assertTrue(s.contains("Hunger:"), "Must contain the 'Hunger:' label.");
+        assertTrue(s.contains("Potion:"), "Must contain the 'Potion:' label.");
     }
 }
