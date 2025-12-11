@@ -76,13 +76,5 @@ public abstract class Gaul extends Character {
         System.out.println(this.name + " eats " + food.getName() + " and gains " + score + " points of health.");
     }
 
-    /**
-     * Returns a string representation of the Gaul.
-     *
-     * @return A string containing the name, health, and strength of the character.
-     */
-    @Override
-    public String toString() {
-        return "Gaul [Name=" + name + ", Health=" + health + ", Strength=" + strength + "]";
-    }
+
 }

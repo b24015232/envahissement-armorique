@@ -86,14 +86,5 @@ public class General extends Soldier implements Leader {
     public void attack() {
         System.out.println(name + " (General) orders a powerful offensive maneuver!");
     }
-
-    @Override
-    public String toString() {
-        return "General [Id=" + id
-                + ", Name=" + name
-                + ", Health=" + health
-                + ", Strength=" + strength
-                + ", Stamina=" + stamina
-                + "]";
-    }
 }
+

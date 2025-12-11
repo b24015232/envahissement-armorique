@@ -13,12 +13,13 @@ import com.asterix.model.character.Chief;
  * [cite_start]Reference: [cite: 489, 506] (Chiefs are attached to a place, except for battlefields)
  */
 public abstract sealed class Settlement extends Place
-        permits GaulVillage, RomanCamp, RomanCity, GalloRomanTown, CreatureEnclosure {
+        permits GaulVillage, RomanCamp, RomanCity, GalloRomanTown{
 
     protected Chief chief;
 
-    public Settlement(String name, double area) {
+    public Settlement(String name, double area, Chief chief) {
         super(name, area);
+        this.chief = chief;
     }
 
     /**
