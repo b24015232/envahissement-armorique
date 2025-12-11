@@ -15,9 +15,6 @@ package com.asterix.model.item;
  */
 public enum FoodType {
 
-    // ========================
-    //  CONSTANTS
-    // ========================
     WILDBOAR(
             "Wildboar",
             "MEAT",
@@ -163,10 +160,6 @@ public enum FoodType {
             true
     );
 
-    // ========================
-    //  FIELDS
-    // ========================
-
     /**
      * Human-readable name of the food (used for display).
      */
@@ -202,10 +195,6 @@ public enum FoodType {
      */
     private final boolean usableInPotion;
 
-    // ========================
-    //  CONSTRUCTOR
-    // ========================
-
     /**
      * Creates a new {@code FoodType} enum constant with its configuration.
      *
@@ -233,31 +222,18 @@ public enum FoodType {
         this.usableInPotion = usableInPotion;
     }
 
-    // ========================
-    //  FACTORY : create()
-    // ========================
-
     /**
      * Creates a concrete {@link Food} instance corresponding to this type.
-     * <p>
-     * If the food is marked as perishable, a {@link PerishableFood} is created
-     * starting in the {@link FreshState}. Otherwise, a {@link SimpleFood} is
-     * created using the {@code baseScore}.
-     * </p>
-     *
-     * @return a new {@link Food} instance for this type
      */
     public Food create() {
         if (isPerishable) {
-            return new PerishableFood(name, type, new FreshState(),gaulCanEat,romanCanEat);
+            // correcting
+            return new PerishableFood(this, new FreshState());
         } else {
-            return new SimpleFood(name, type, baseScore, gaulCanEat, romanCanEat);
+            // correcting : we pass this
+            return new SimpleFood(this);
         }
     }
-
-    // ========================
-    //  GETTERS
-    // ========================
 
     /**
      * Returns the display name of this food type.
