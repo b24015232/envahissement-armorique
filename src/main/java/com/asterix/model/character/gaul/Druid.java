@@ -5,6 +5,9 @@ import com.asterix.model.ability.Leader;
 import com.asterix.model.ability.Worker;
 import com.asterix.model.character.Character;
 import com.asterix.model.character.Gender;
+import com.asterix.model.item.Cauldron;
+import com.asterix.model.item.FoodType;
+import com.asterix.model.item.PerishableFood;
 
 /**
  * Represents a Druid in the Gaulish village (e.g., Panoramix).
@@ -16,7 +19,11 @@ import com.asterix.model.character.Gender;
  * Implements {@link Worker}, {@link Fighter}, and {@link Leader}.
  */
 public class Druid extends Gaul implements Worker, Fighter, Leader {
-    // TODO : put the recipe probabily here later
+
+    /**
+     * The cauldron currently being used by the Druid.
+     */
+    private Cauldron currentCauldron;
 
     /**
      * Constructs a new Druid character.
@@ -35,37 +42,79 @@ public class Druid extends Gaul implements Worker, Fighter, Leader {
     /**
      * Prepares a fresh cauldron of magic potion.
      * <p>
-     * This unique ability involves mixing specific ingredients like mistletoe and rock oil.
-     * It allows other Gauls to gain superhuman strength.
+     * This unique ability involves mixing specific ingredients like mistletoe,
+     * fresh clover, and rock oil (or beet juice).
+     * The Druid must ensure the fish is "average" (partially fresh) for the recipe to succeed.
      * </p>
      */
     public void concoctPotion() {
-        System.out.println(this.getName() + " lights a fire under the cauldron");
-        System.out.println("Adding mistletoe, lobster (for the taste), and rock oil...");
-        System.out.println("The magic potion is ready ! (health and strength boost available)");
+        System.out.println(this.getName() + " lights a fire under the cauldron and starts brewing...");
+
+        this.currentCauldron = new Cauldron();
+
+        // 1. Add standard ingredients
+        currentCauldron.addIngredient(FoodType.MISTLETOE.create());
+        currentCauldron.addIngredient(FoodType.CARROT.create());
+        currentCauldron.addIngredient(FoodType.SALT.create());
+        currentCauldron.addIngredient(FoodType.HONEY.create());
+        currentCauldron.addIngredient(FoodType.MEAD.create());
+        currentCauldron.addIngredient(FoodType.SECRET_INGREDIENT.create());
+
+        // Substitution allowed: Rock Oil or Beet Juice
+        currentCauldron.addIngredient(FoodType.ROCK_OIL.create());
+
+        // 2. Add freshness-sensitive ingredients
+        // Clover must be FRESH (default state)
+        currentCauldron.addIngredient(FoodType.CLOVER.create());
+
+        // 3. Special Handling: Fish must be "AVERAGE" (Partially Fresh)
+        // We create a fresh fish, then let time pass once to degrade it.
+        PerishableFood fish = (PerishableFood) FoodType.FISH.create();
+        fish.passTime(); // Transitions from Fresh -> PartiallyFresh (Average)
+        System.out.println("The druid waits for the fish to smell... just enough.");
+
+        currentCauldron.addIngredient(fish);
+
+        // Attempt to brew
+        boolean success = currentCauldron.brew();
+
+        if (success) {
+            System.out.println("By Toutatis! The magic potion is ready!");
+        } else {
+            System.out.println("By Belenos... I messed up the recipe.");
+        }
     }
 
-    //implementing interfaces
+    /**
+     * Serves a dose of magic potion to a fellow Gaul.
+     *
+     * @param gaul The Gaul to receive the potion.
+     */
+    public void servePotion(Gaul gaul) {
+        if (currentCauldron != null) {
+            double dose = currentCauldron.takeLadle();
+            if (dose > 0) {
+                gaul.drinkPotion(dose);
+            } else {
+                System.out.println("The cauldron is empty!");
+            }
+        } else {
+            System.out.println("There is no cauldron ready yet.");
+        }
+    }
+
+    // --- Interface Implementations ---
 
     /**
      * Implementation of the {@link Worker} interface.
-     * <p>
-     * For a druid, work consists primarily of going into the forest to gather
-     * ingredients, specifically mistletoe, using a golden sickle.
-     * </p>
      */
     @Override
     public void work() {
-        //for a druid, work is mostly to prepare potion or pick mistletoe
         System.out.println(this.getName() + " goes into the forest to gather fresh mistletoe with a golden sickle");
     }
 
     /**
      * Implementation of the {@link Leader} interface.
-     * <p>
-     * As a figure of wisdom and authority, the Druid can command attention
-     * or silence within the village.
-     * </p>
      */
     @Override
     public void command() {
@@ -74,24 +123,13 @@ public class Druid extends Gaul implements Worker, Fighter, Leader {
 
     /**
      * Implementation of the {@link Fighter} interface.
-     * <p>
-     * Although primarily a scholar, the Druid can defend himself using his staff.
-     * </p>
-     *
-     * @param opponent The character being fought.
      */
     @Override
     public void fight(Character opponent) {
-        // Simple implementation to upgrade later when the game will be more complete
-        System.out.println(this.getName() + " hits " + opponent.getName() + " with his staff !");
+        System.out.println(this.getName() + " hits " + opponent.getName() + " with his staff!");
         resolveFight(opponent);
     }
 
-    /**
-     * Returns a string representation of the Druid.
-     *
-     * @return A string containing the class name "Druid" followed by the Gaul details.
-     */
     @Override
     public String toString() {
         return "Druid " + super.toString();
