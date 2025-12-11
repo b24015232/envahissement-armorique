@@ -6,7 +6,6 @@
         <place type="Battlefield">
             <name>Great Plains of Testing</name>
             <area>2000</area>
-
             <characters>
                 <character type="Merchant">
                     <name>Asterix</name>
@@ -16,7 +15,6 @@
                     <stamina>20.0</stamina>
                     <gender>MALE</gender>
                 </character>
-
                 <character type="Merchant">
                     <name>Obelix</name>
                     <age>35</age>
@@ -25,7 +23,6 @@
                     <stamina>50.0</stamina>
                     <gender>MALE</gender>
                 </character>
-
                 <character type="Legionnary">
                     <name>Legionary Minus</name>
                     <age>25</age>
@@ -34,21 +31,19 @@
                     <stamina>5.0</stamina>
                     <gender>MALE</gender>
                 </character>
-
-                <character type="Legionnary">
-                    <name>Legionary Cortex</name>
-                    <age>22</age>
-                    <height>1.70</height>
-                    <strength>4.0</strength>
-                    <stamina>4.0</stamina>
-                    <gender>MALE</gender>
-                </character>
             </characters>
         </place>
 
         <place type="GaulVillage">
             <name>The Quiet Village</name>
             <area>500</area>
+
+            <chief>
+                <name>Abraracourcix</name>
+                <age>50</age>
+                <sex>MALE</sex>
+            </chief>
+
             <characters>
                 <character type="Merchant">
                     <name>Panoramix</name>

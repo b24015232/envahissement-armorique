@@ -43,12 +43,39 @@ public class InvasionTheater {
         }
     }
 
+    /**
+     * Retrieves the list of places.
+     * <p>
+     * This method returns a defensive copy of the list. Modifying the returned
+     * list will not affect the internal state of this object.
+     *
+     * @return a new List containing the Place objects.
+     */
     public List<Place> getPlaces() {
         return new ArrayList<>(places);
     }
+
+    /**
+     * Systematically increases the hunger of ALL characters in ALL places.
+     * <p>
+     * This replaces the random event logic for hunger.
+     * Every turn, every character gets hungrier.
+     * </p>
+     */
+    public void applyDailyHunger() {
+        if (this.places == null) return;
+
+        // Stream through all places and all characters
+        this.places.stream()
+                .flatMap(place -> place.getCharacters().stream())
+                .forEach(character -> {
+                    // Increase hunger by 10 points every turn
+                    // Ensure Character class has increaseHunger(int amount)
+                    character.increaseHunger(10);
+                });
+    }
     /**
      * Manages combat logic between characters in Battlefields.
-     * Rename of 'gererCombats' to comply with English naming convention.
      */
     public void handleFights() {
         if (this.places == null || this.places.isEmpty()) return;
@@ -87,7 +114,7 @@ public class InvasionTheater {
     }
 
     /**
-     * [cite_start]Randomly modifies the state of characters (Hunger, Potion, Health)[cite: 112].
+     * Randomly modifies the state of characters (Hunger, Potion, Health).
      */
     public void applyRandomEvents() {
         if (places == null) return;
@@ -110,41 +137,30 @@ public class InvasionTheater {
     }
 
     /**
-     * Generates food randomly in compatible locations at each turn.
-     * * Logic:
-     * 1. Iterates through all places.
-     * 2. Skips Battlefields (Constraint ).
-     * 3. Uses a probability check to decide if food spawns.
+     * Generates food in every eligible location at every turn.
+     * <p>
+     * Removed the random probability check. Food now spawns guaranteed.
+     * Constraint: Still excludes Battlefields.
+     * </p>
      */
     public void generateFood() {
         if (this.places == null) return;
 
-        // Message de debug pour vérifier que la méthode est appelée
-        System.out.println("[SIMULATION] Checking food generation...");
-
         for (Place place : this.places) {
-
-            // CONSTRAINT: Food cannot spawn on Battlefields
             if (place instanceof Battlefield) {
                 continue;
             }
 
-            // Probability: 40% chance per location per turn
-            if (random.nextDouble() < 0.40) {
+            // SYSTEMATIC SPAWN (No random check)
+            Food newFood = FoodFactory.createRandomFood();
+            place.addFood(newFood);
 
-                // 1. Create random food using the Factory
-                Food newFood = FoodFactory.createRandomFood();
-
-                // 2. Add it to the place using the method we just added
-                place.addFood(newFood);
-
-                System.out.println("   -> 🍎 A " + newFood.getName() + " appeared in " + place.getName());
-            }
+            System.out.println("   -> 🍎 (Guaranteed) A " + newFood.getName() + " appeared in " + place.getName());
         }
     }
 
     /**
-     * [cite_start]Ages food items, turning fresh food into stale food[cite: 114].
+     * Ages food items, turning fresh food into stale food.
      */
     public void ageFood() {
         if (places == null) return;

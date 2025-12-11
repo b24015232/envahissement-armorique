@@ -1,29 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ComboBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.asterix.controller.SimulationController"><top>
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.asterix.controller.SimulationController">
+
+    <top>
         <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
-                <TextField fx:id="inputNomTheatre" promptText="Nom du théâtre" />
-                <Button onAction="#handleCreerTheatre" text="Nouveau Théâtre" />
-                <Button onAction="#handleSaveScenario" text="Sauvegarder XML..." />
-                <Button onAction="#handleLoadScenario" text="Charger XML..." />
-                <Button fx:id="btnStart" mnemonicParsing="false" onAction="#handleStart" text="Lancer Simulation" />
-                <Button fx:id="btnStop" mnemonicParsing="false" onAction="#handleStop" text="Pause" />
+                <TextField fx:id="inputTheaterName" promptText="Theater Name" />
+                <Button onAction="#handleCreateTheater" text="New" />
+                <Separator orientation="VERTICAL" />
+                <Separator orientation="VERTICAL" />
+                <TextField fx:id="inputPlaceName" promptText="Place Name" prefWidth="120"/>
+                <TextField fx:id="inputPlaceArea" promptText="Area (m²)" prefWidth="80"/>
+                <ComboBox fx:id="comboPlaceType" promptText="Type" prefWidth="120"/>
+                <Button onAction="#handleCreatePlace" text="➕ Add Place" style="-fx-base: lightblue;"/>
+                <Button onAction="#handleSaveScenario" text="Save XML" />
+                <Button onAction="#handleLoadScenario" text="Load XML" />
+                <Separator orientation="VERTICAL" />
+                <Button fx:id="btnStart" onAction="#handleStart" style="-fx-base: lightgreen; -fx-font-weight: bold;" text="▶ Start" />
+                <Button fx:id="btnStop" onAction="#handleStop" style="-fx-base: pink; -fx-font-weight: bold;" text="⏸ Pause" />
             </items>
         </ToolBar>
     </top>
-    <center>
-        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+
+    <left>
+        <VBox spacing="10.0" style="-fx-background-color: #f4f4f4; -fx-border-color: #cccccc;" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
             <children>
-                <TextArea fx:id="outputArea" editable="false" prefHeight="556.0" prefWidth="800.0" wrapText="true" />
+                <Label text="Clan Chief Actions" textFill="#2b5797">
+                    <font>
+                        <Font name="System Bold" size="13.0" />
+                    </font>
+                </Label>
+
+                <Label fx:id="lblCurrentChief" maxWidth="200.0" style="-fx-background-color: white; -fx-padding: 5; -fx-border-color: #dddddd; -fx-background-radius: 3;" text="Waiting for simulation..." wrapText="true" />
+
+                <Separator prefWidth="200.0" />
+
+                <Button fx:id="btnFeed" maxWidth="1.7976931348623157E308" onAction="#handleFeed" text="🍖 Feed Tribe" />
+                <Button fx:id="btnHeal" maxWidth="1.7976931348623157E308" onAction="#handleHeal" text="💊 Heal Tribe" />
+
+                <Separator prefWidth="200.0" />
+
+                <Button fx:id="btnEndTurn" maxWidth="1.7976931348623157E308" onAction="#handleEndTurn" style="-fx-base: lightblue;" text="✅ End Turn" />
+
+                <Separator prefWidth="200.0" />
+
+                <Button maxWidth="1.7976931348623157E308" onAction="#handleDisplayStats" text="📊 Show Place Stats" />
+
             </children>
         </VBox>
+    </left>
+
+    <center>
+        <TextArea fx:id="outputArea" editable="false" wrapText="true" BorderPane.alignment="CENTER">
+            <font>
+                <Font name="Monospaced Regular" size="12.0" />
+            </font>
+            <BorderPane.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </BorderPane.margin>
+        </TextArea>
     </center>
+
 </BorderPane>

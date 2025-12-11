@@ -1,5 +1,6 @@
 package com.asterix.utils;
 
+import com.asterix.model.character.Chief;
 import com.asterix.model.character.Gender;
 import com.asterix.model.character.gaul.Gaul;
 import com.asterix.model.character.gaul.Merchant;
@@ -20,17 +21,28 @@ public class XmlScenarioLoader {
         return loadTheaterFromFile(new File(filePath));
     }
 
+    /**
+     * Parses an XML file to construct a full InvasionTheater instance.
+     * <p>
+     * This method handles the creation of the theater, its places, and their inhabitants.
+     * It manages the circular dependency between a Chief and their Settlement by
+     * initializing the Chief first with a null location, then creating the concrete
+     * Settlement (GaulVillage or RomanCamp), and finally linking the Chief to the Place.
+     * </p>
+     *
+     * @param file The XML file containing the scenario data.
+     * @return A fully populated {@link InvasionTheater} object.
+     * @throws Exception If the XML structure is invalid or a parsing error occurs.
+     */
     public static InvasionTheater loadTheaterFromFile(File file) throws Exception {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(file);
         doc.getDocumentElement().normalize();
 
-        // 1. Charger le Théâtre
         String theaterName = getTagValue("name", doc.getDocumentElement());
-        InvasionTheater theater = new InvasionTheater(theaterName != null ? theaterName : "Théâtre Sans Nom");
+        InvasionTheater theater = new InvasionTheater(theaterName != null ? theaterName : "Unnamed Theater");
 
-        // 2. Charger les Lieux
         NodeList placeNodes = doc.getElementsByTagName("place");
 
         for (int i = 0; i < placeNodes.getLength(); i++) {
@@ -38,28 +50,40 @@ public class XmlScenarioLoader {
 
             String type = placeElement.getAttribute("type");
             String name = getTagValue("name", placeElement);
-            // Gestion d'erreur basique pour le parsing des nombres
-            double area = 0;
-            try {
-                area = Double.parseDouble(getTagValue("area", placeElement));
-            } catch (NumberFormatException e) {
-                System.err.println("Erreur de format pour la surface du lieu " + name);
+            double area = Double.parseDouble(getTagValue("area", placeElement));
+
+            Place place = null;
+
+            if ("Battlefield".equalsIgnoreCase(type)) {
+                place = new Battlefield(name, area);
+            } else if ("Enclos".equalsIgnoreCase(type) || "CreatureEnclosure".equalsIgnoreCase(type)) {
+                place = new CreatureEnclosure(name, area);
+            } else {
+                Element chiefElement = (Element) placeElement.getElementsByTagName("chief").item(0);
+                if (chiefElement != null) {
+                    String cName = getTagValue("name", chiefElement);
+                    String cSex = getTagValue("sex", chiefElement);
+                    int cAge = Integer.parseInt(getTagValue("age", chiefElement));
+
+                    Chief chief = new Chief(cName, cSex, cAge, null);
+
+                    if ("RomanCamp".equalsIgnoreCase(type) || "Camp".equalsIgnoreCase(type)) {
+                        place = new RomanCamp(name, area, chief);
+                    } else {
+                        place = new GaulVillage(name, area, chief);
+                    }
+
+                    chief.setLocation(place);
+                }
             }
 
-            Place place = createPlace(type, name, area);
-
             if (place != null) {
-                // 3. Charger les Personnages dans ce lieu
                 NodeList charNodes = placeElement.getElementsByTagName("character");
                 for (int j = 0; j < charNodes.getLength(); j++) {
                     Element charElement = (Element) charNodes.item(j);
                     Character c = createCharacter(charElement);
                     if (c != null) {
-                        try {
-                            place.addCharacter(c);
-                        } catch (Exception e) {
-                            System.err.println("Erreur ajout perso " + c.getName() + " : " + e.getMessage());
-                        }
+                        place.addCharacter(c);
                     }
                 }
                 theater.addPlace(place);
@@ -81,13 +105,13 @@ public class XmlScenarioLoader {
         return "0"; // Retourne "0" par défaut pour éviter de faire planter parseInt/parseDouble
     }
 
-    private static Place createPlace(String type, String name, double area) {
+    private static Place createPlace(String type, String name, double area, Chief chief) {
         if (type == null) return new Battlefield(name, area);
 
         return switch (type.toLowerCase()) {
             case "battlefield" -> new Battlefield(name, area);
-            case "gaulvillage" -> new GaulVillage(name, area);
-            case "romancamp" -> new RomanCamp(name, area);
+            case "gaulvillage" -> new GaulVillage(name, area, chief);
+            case "romancamp" -> new RomanCamp(name, area, chief);
             default -> {
                 System.out.println("Lieu inconnu : " + type + ", création Battlefield par défaut.");
                 yield new Battlefield(name, area);
