@@ -45,10 +45,6 @@ public class Prefect extends Roman implements Leader {
 
     @Override
     public String toString() {
-        return "Prefect [Name=" + name
-                + ", Health=" + health
-                + ", Strength=" + strength
-                + ", Stamina=" + stamina
-                + "]";
+        return "Perfect " + super.toString();
     }
 }

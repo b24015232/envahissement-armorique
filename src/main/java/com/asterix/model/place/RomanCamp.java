@@ -1,6 +1,7 @@
 package com.asterix.model.place;
 
 import com.asterix.model.character.Character;
+import com.asterix.model.character.Chief;
 import com.asterix.model.character.roman.Roman; // Assuming a specific class for fighters
 import com.asterix.model.character.creature.Creature;
 
@@ -14,8 +15,8 @@ import com.asterix.model.character.creature.Creature;
  */
 public final class RomanCamp extends Settlement {
 
-    public RomanCamp(String name, double area) {
-        super(name, area);
+    public RomanCamp(String name, double area, Chief chief) {
+        super(name, area, chief);
     }
 
     @Override

@@ -90,13 +90,4 @@ public abstract class Roman extends Character {
         System.out.println(this.name + " drinks " + dose + " " + unit + " of magic potion!");
     }
 
-    @Override
-    public String toString() {
-        return "Roman [Name=" + name
-                + ", Health=" + health
-                + ", Strength=" + strength
-                + ", Stamina=" + stamina
-                + ", PotionLevel=" + potionLevel
-                + "]";
-    }
 }

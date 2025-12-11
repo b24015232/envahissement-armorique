@@ -57,6 +57,10 @@ public abstract class Character {
         return potionLevel;
     }
 
+    public void increaseHunger(double hunger) {
+        this.hunger += hunger;
+    }
+
     /**
      * Returns whether this character is still alive.
      *
@@ -161,5 +165,19 @@ public abstract class Character {
 
     // Abstract method to force subclasses to implement a string representation
     @Override
-    public abstract String toString();
+    public String toString() {
+        return String.format(
+                // Notez le changement pour Hunger : %.1f au lieu de %d car c'est un double
+                "%-15s | %-6s | Age: %-3d | 📏 %.2fm | ❤️ HP: %-5.1f | 🍖 Hunger: %-5.1f | 💪 Str: %-5.1f | 🏃 Sta: %-5.1f | 🧪 Potion: %.1f",
+                this.name,
+                this.gender,
+                this.age,
+                this.height,
+                this.health,
+                this.hunger,
+                this.strength,
+                this.stamina,
+                this.potionLevel
+        );
+    }
 }
