@@ -5,7 +5,7 @@ import com.asterix.model.character.creature.Lycanthrope;
 import com.asterix.model.character.gaul.BlackSmith;
 import com.asterix.model.character.roman.Legionnaire;
 import com.asterix.model.item.Food;
-import com.asterix.model.item.SimpleFood;
+import com.asterix.model.item.FoodType; // Import required for the Fix
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -19,9 +19,8 @@ class BattlefieldTest {
 
     @Test
     void battlefieldShouldInitializeWithNameAndEmptyCollections() {
-        Battlefield battlefield = new Battlefield("Champ", 100.0);
-
-        assertEquals("Champ", battlefield.getName());
+        Battlefield battlefield = new Battlefield("Field", 100.0);
+        assertEquals("Field", battlefield.getName());
         assertNotNull(battlefield.getCharacters());
         assertTrue(battlefield.getCharacters().isEmpty());
         assertNotNull(battlefield.getFoods());
@@ -30,16 +29,15 @@ class BattlefieldTest {
 
     @Test
     void addCharacterShouldRejectNull() {
-        Battlefield battlefield = new Battlefield("Champ", 100.0);
-
+        Battlefield battlefield = new Battlefield("Field", 100.0);
         assertThrows(IllegalArgumentException.class, () -> battlefield.addCharacter(null));
     }
 
     @Test
     void addCharacterShouldAcceptAnyCharacterType() {
-        Battlefield battlefield = new Battlefield("Champ", 100.0);
+        Battlefield battlefield = new Battlefield("Field", 100.0);
 
-        BlackSmith gaul = new BlackSmith("Astérix", 35, 1.70, 20.0, 15.0, Gender.MALE);
+        BlackSmith gaul = new BlackSmith("Asterix", 35, 1.70, 20.0, 15.0, Gender.MALE);
         Legionnaire roman = new Legionnaire("Fortus", 30, 1.80, 18.0, 12.0, Gender.MALE);
         Lycanthrope creature = new Lycanthrope("Lupus", 25, 1.85, 22.0, 10.0, Gender.MALE);
 
@@ -56,8 +54,8 @@ class BattlefieldTest {
 
     @Test
     void removeCharacterShouldRemoveFromPlace() {
-        Battlefield battlefield = new Battlefield("Champ", 100.0);
-        BlackSmith gaul = new BlackSmith("Astérix", 35, 1.70, 20.0, 15.0, Gender.MALE);
+        Battlefield battlefield = new Battlefield("Field", 100.0);
+        BlackSmith gaul = new BlackSmith("Asterix", 35, 1.70, 20.0, 15.0, Gender.MALE);
 
         battlefield.addCharacter(gaul);
         assertEquals(1, battlefield.getCharacters().size());
@@ -68,8 +66,8 @@ class BattlefieldTest {
 
     @Test
     void getCharactersShouldReturnDefensiveCopy() {
-        Battlefield battlefield = new Battlefield("Champ", 100.0);
-        BlackSmith gaul = new BlackSmith("Astérix", 35, 1.70, 20.0, 15.0, Gender.MALE);
+        Battlefield battlefield = new Battlefield("Field", 100.0);
+        BlackSmith gaul = new BlackSmith("Asterix", 35, 1.70, 20.0, 15.0, Gender.MALE);
 
         battlefield.addCharacter(gaul);
 
@@ -82,8 +80,11 @@ class BattlefieldTest {
 
     @Test
     void getFoodsShouldExposeInternalList() {
-        Battlefield battlefield = new Battlefield("Champ", 100.0);
-        Food bread = new SimpleFood("Bread", "FOOD", 2, true, true);
+        Battlefield battlefield = new Battlefield("Field", 100.0);
+
+        // Fix: using the factory via FoodType instead of manual constructor
+        // Honey creates a SimpleFood
+        Food bread = FoodType.HONEY.create();
 
         List<Food> foodsRef = battlefield.getFoods();
         foodsRef.add(bread);
@@ -95,10 +96,10 @@ class BattlefieldTest {
 
     @Test
     void toStringShouldContainNameAndPopulation() {
-        Battlefield battlefield = new Battlefield("Champ", 100.0);
+        Battlefield battlefield = new Battlefield("Field", 100.0);
         String text = battlefield.toString();
 
-        assertTrue(text.contains("Champ"));
+        assertTrue(text.contains("Field"));
         assertTrue(text.contains("population"));
     }
 }
