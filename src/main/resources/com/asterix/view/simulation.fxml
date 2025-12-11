@@ -63,6 +63,16 @@
 
                 <Button fx:id="btnFeed" maxWidth="1.7976931348623157E308" onAction="#handleFeed" style="-fx-alignment: CENTER_LEFT;" text="🍖 Nourrir la tribu" />
                 <Button fx:id="btnHeal" maxWidth="1.7976931348623157E308" onAction="#handleHeal" style="-fx-alignment: CENTER_LEFT;" text="💊 Soigner les blessés" />
+                <Button fx:id="btnBrew" maxWidth="1.7976931348623157E308" onAction="#handleBrewPotion" style="-fx-alignment: CENTER_LEFT; -fx-base: #e1bee7;" text="🧪 Demander Potion" />
+
+                <Button fx:id="btnGather" maxWidth="1.7976931348623157E308" onAction="#handleGather" style="-fx-alignment: CENTER_LEFT; -fx-base: #a5d6a7;" text="🌿 Faire la cueillette" />
+
+                <Separator />
+                <Label text="Voyage Rapide" textFill="#1565c0">
+                    <font><Font name="System Bold" size="12.0" /></font>
+                </Label>
+                <ComboBox fx:id="comboChiefDest" promptText="Destination du Chef" maxWidth="1.7976931348623157E308" />
+                <Button fx:id="btnChiefTravel" onAction="#handleChiefTravel" text="🏃 Y aller (Fin tour)" maxWidth="1.7976931348623157E308" style="-fx-base: #fff9c4;"/>
 
                 <Region VBox.vgrow="ALWAYS" />
 

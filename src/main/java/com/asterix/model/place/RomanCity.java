@@ -10,7 +10,6 @@ import com.asterix.model.character.creature.Creature;
  * <p>
  * Access is restricted to any Roman (Civilian or Soldier) and Fantastic Creatures.
  * </p>
- * [cite_start]Reference: [cite: 501]
  */
 public final class RomanCity extends Settlement {
 

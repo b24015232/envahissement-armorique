@@ -13,10 +13,6 @@ import java.util.List;
  * (characters and food). It defines the base logic for adding/removing characters
  * based on specific access rules defined by subclasses.
  * </p>
- * * @author Project Team
- * @version 1.0
- * @see com.asterix.model.character.Character
- * Reference:
  */
 public abstract sealed class Place permits Battlefield, Settlement, CreatureEnclosure {
 
@@ -48,7 +44,6 @@ public abstract sealed class Place permits Battlefield, Settlement, CreatureEncl
      *
      * @param c The character attempting to enter
      * @return {@code true} if the character meets the entry criteria, {@code false} otherwise.
-     * Reference:
      */
     public abstract boolean canEnter(Character c);
 
@@ -83,7 +78,6 @@ public abstract sealed class Place permits Battlefield, Settlement, CreatureEncl
      * Returns a defensive copy of the list of characters currently in this place.
      *
      * @return A new List containing the characters.
-     * Reference:
      */
     public List<Character> getCharacters() {
         return new ArrayList<>(this.characters);
@@ -93,7 +87,6 @@ public abstract sealed class Place permits Battlefield, Settlement, CreatureEncl
      * Returns the list of food available in this place.
      *
      * @return The list of food items.
-     * Reference:
      */
     public List<Food> getFoods() {
         return this.foods;
@@ -104,7 +97,6 @@ public abstract sealed class Place permits Battlefield, Settlement, CreatureEncl
      * Necessary for the simulation engine to spawn items.
      *
      * @param food The food item to add.
-     * Reference:
      */
     public void addFood(Food food) {
         if (food != null) {

@@ -11,7 +11,6 @@ import com.asterix.model.character.creature.Creature;
  * Access is restricted to Roman Fighters (Legionaries, etc.) and Fantastic Creatures.
  * Civilians cannot enter.
  * </p>
- * [cite_start]Reference: [cite: 500]
  */
 public final class RomanCamp extends Settlement {
 

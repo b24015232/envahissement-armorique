@@ -26,7 +26,6 @@ public abstract sealed class Settlement extends Place
      * Assigns a chief to this settlement.
      *
      * @param chief The chief to manage this place.
-     * [cite_start]Reference: [cite: 489]
      */
     public void setChief(Chief chief) {
         this.chief = chief;
@@ -43,7 +42,6 @@ public abstract sealed class Settlement extends Place
 
     /**
      * Allows the chief to examine the place, displaying characteristics and contents.
-     * [cite_start]Reference: [cite: 511]
      */
     public void examine() {
         System.out.println("Examining settlement: " + this.name);

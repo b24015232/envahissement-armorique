@@ -6,7 +6,7 @@ import com.asterix.model.character.gaul.*;
 import com.asterix.model.character.roman.*;
 import com.asterix.model.simulation.InvasionTheater;
 import com.asterix.model.place.*;
-import com.asterix.model.character.Character; // Import explicite pour éviter la confusion avec java.lang.Character
+import com.asterix.model.character.Character;
 
 import org.w3c.dom.*;
 import javax.xml.parsers.DocumentBuilder;

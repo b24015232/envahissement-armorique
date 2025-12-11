@@ -21,7 +21,10 @@ import java.util.Random;
 
 /**
  * Represents the invasion theater where the simulation takes place.
- * Acts as the main facade for the domain model.
+ * <p>
+ * Acts as the main facade for the domain model, orchestrating interactions between
+ * places, characters, and global events (time passage, battles, resource generation).
+ * </p>
  */
 public class InvasionTheater {
 
@@ -31,14 +34,29 @@ public class InvasionTheater {
 
     private static final double RANDOM_EVENT_PROBABILITY = 0.30;
 
+    /**
+     * Constructs a new Invasion Theater.
+     *
+     * @param name The name of the theater (e.g., "Armorica 50 BC").
+     */
     public InvasionTheater(String name) {
         this.name = name;
         this.places = new ArrayList<>();
         this.random = new Random();
     }
 
+    /**
+     * Gets the name of the theater.
+     *
+     * @return The theater name.
+     */
     public String getName() { return name; }
 
+    /**
+     * Adds a place to the theater.
+     *
+     * @param place The place to add.
+     */
     public void addPlace(Place place) {
         if (place != null) {
             this.places.add(place);
@@ -47,20 +65,23 @@ public class InvasionTheater {
         }
     }
 
+    /**
+     * Returns a copy of the list of places.
+     *
+     * @return A list of places.
+     */
     public List<Place> getPlaces() {
         return new ArrayList<>(places);
     }
 
-    public void applyDailyHunger() {
-    }
-
-    public void applyRandomEvents() {
-    }
-
     /**
-     * Makes time pass for all entities in the theater.
+     * Systematically increases the hunger of ALL characters in ALL places.
+     * <p>
+     * This replaces the random event logic for hunger.
+     * Every turn, every character gets hungrier.
+     * </p>
      */
-    public void applyTimePassage() {
+    public void applyDailyHunger() {
         if (this.places == null) return;
         for (Place place : this.places) {
             for (Character character : place.getCharacters()) {
@@ -70,6 +91,7 @@ public class InvasionTheater {
 
         this.ageFood();
     }
+
 
     /**
      * Passes control to clan chiefs to manage their settlements.
@@ -251,7 +273,11 @@ public class InvasionTheater {
             }
         }
     }
-
+    /**
+     * Returns a string representation of the entire theater state.
+     *
+     * @return A formatted string suitable for display.
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

@@ -8,7 +8,7 @@ import com.asterix.model.character.creature.Creature;
  * <p>
  * Access is strictly restricted to Fantastic Creatures (e.g., Lycanthropes).
  * </p>
- * [cite_start]Reference: [cite: 503, 621]
+ *
  */
 public final class CreatureEnclosure extends Place {
 

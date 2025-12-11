@@ -3,29 +3,33 @@ package com.asterix.model.place;
 import com.asterix.model.character.Character;
 
 /**
- * Represents a battlefield where combats mainly occur.
+ * Represents a battlefield where combats primarily occur.
  * <p>
- * A battlefield is a neutral ground that can contain any type of character.
- * It is not managed by a specific chief.
+ * A battlefield is a neutral zone without a specific leader or governance structure.
+ * Unlike settlements, it imposes no restrictions on entry, allowing characters
+ * of all factions (Gauls, Romans, Creatures) to gather and fight.
  * </p>
- *
- * [cite_start]Reference: [cite: 504, 536]
  */
 public final class Battlefield extends Place {
 
+    /**
+     * Constructs a new Battlefield.
+     *
+     * @param name The name of the battlefield (e.g., "Plains of Gergovia").
+     * @param area The surface area of the battlefield in square meters.
+     */
     public Battlefield(String name, double area) {
         super(name, area);
     }
 
     /**
-     * Validates entry rules for a battlefield.
+     * Determines if a character can enter this place.
      * <p>
-     * A battlefield can contain all types of characters.
+     * Battlefields are open to everyone. There are no restrictions based on faction or type.
      * </p>
      *
-     * @param c The character.
+     * @param c The character attempting to enter.
      * @return Always {@code true}.
-     * [cite_start]Reference: [cite: 504]
      */
     @Override
     public boolean canEnter(Character c) {

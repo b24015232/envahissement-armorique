@@ -166,6 +166,17 @@ public abstract class Character {
 
     @Override
     public String toString() {
-        return name + (isStatue ? " [STATUE]" : "") + (isLycanthrope ? " [WOLF]" : "");
+        return String.format(
+                "%-15s | %-6s | Age: %-3d | 📏 %.2fm | ❤️ HP: %-5.1f | 🍖 Hunger: %-5.1f | 💪 Str: %-5.1f | 🏃 Sta: %-5.1f | 🧪 Potion: %.1f",
+                this.name,
+                this.gender,
+                this.age,
+                this.height,
+                this.health,
+                this.hunger,
+                this.strength,
+                this.stamina,
+                this.potionLevel
+        );
     }
 }

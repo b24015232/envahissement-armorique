@@ -11,7 +11,6 @@ import com.asterix.model.character.roman.Roman;
  * Access is restricted to Gauls and Romans. Fantastic Creatures are NOT explicitly allowed
  * in this specific settlement type according to specs.
  * </p>
- * [cite_start]Reference: [cite: 502]
  */
 public final class GalloRomanTown extends Settlement {
 
